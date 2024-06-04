@@ -1,8 +1,8 @@
 """
-    Code part of FYP: "Automated aerodynamic shape optimisation of winglets with SU2 on Imperial HPC cluster"
+    FYP: "Automated aerodynamic shape optimisation of winglets with SU2 on Imperial HPC cluster"
 
     Author: Jaime Galiana Herrera
-    Date: 2024-02-01
+    Date: 2024-06-03
 
     Script for automated generation of wing geometry with OpenVSP, mesh with StarCCM+, CFD simulation on SU2 and ASO on SU2 using discrete-adjoint.
 

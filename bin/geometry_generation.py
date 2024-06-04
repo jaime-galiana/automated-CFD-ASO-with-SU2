@@ -2,7 +2,7 @@
     FYP: Automated aerodynamic shape optimisation of winglets with SU2 on Imperial HPC cluster
 
     Author: Jaime Galiana Herrera
-    Date: 2024-02-01
+    Date: 2024-06-03
     Description: Generates geometric models for CFD analysis. Distances in meters, angles in degrees.
 """
 
