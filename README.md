@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/ImperialNewLogo.jpg" alt="Imperial Logo" width="200"/>
+  <img src="images/ImperialNewLogo.jpg" alt="Imperial Logo" width="500"/>
 </p>
 
 # Automated Workflow for Geometry Generation, Mesh Generation, CFD Simulation, and ASO
@@ -32,9 +32,8 @@ This workflow automates the following steps:
 4. **ASO**: Running the Aerodynamic Shape Optimization based on CFD results.
 
 <p align="center">
-  <img src="images/FLOWCHART.png" alt="Winglet design process" width="200"/>
+  <img src="images/FLOWCHART.png" alt="Winglet design process" width="800"/>
 </p>
-
 
 ## Prerequisites
 
