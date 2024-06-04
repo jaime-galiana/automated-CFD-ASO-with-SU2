@@ -1,0 +1,20 @@
+#!/bin/bash
+#PBS -l walltime=72:00:00
+#PBS -l select=1:ncpus=48:mem=300gb
+
+module load tools/prod
+module load OpenMPI/4.1.4-GCC-12.2.0
+module load anaconda3/personal
+
+export SU2_RUN=/rds/general/user/jg2219/home/Compiled-SU2-8.0.0-mpi/bin
+export SU2_HOME=/rds/general/user/jg2219/home/Source/SU2
+export PATH=$PATH:$SU2_RUN
+export PYTHONPATH=$PYTHONPATH:$SU2_RUN
+
+cd $PBS_O_WORKDIR
+
+source activate
+conda activate envFYP
+
+# python3 /rds/general/user/jg2219/home/Compiled-SU2-8.0.0-mpi/bin/set_ffd_design_var.py -i 5 -j 8 -k 2 -b WING -m 'wing'
+python3 run.py

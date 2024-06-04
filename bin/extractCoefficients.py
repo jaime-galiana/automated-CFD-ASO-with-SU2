@@ -1,3 +1,10 @@
+
+    #  Author: Jaime Galiana Herrera
+    #  Date: 2024-05-01
+    #  Script that extracts the aerodynamic coefficients from simulation. To be run in HPC.
+    #  Inputs from PBS file:
+
+
 import os
 import re
 
