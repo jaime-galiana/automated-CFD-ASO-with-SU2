@@ -176,9 +176,7 @@ python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 
 ## Post-Processing
 ### Extracting Coefficients
 
-The software includes a script, extract_coefficients.py, which iterates through all winglet directories and extracts the CL and CD data. This script is crucial for analyzing the aerodynamic performance of the winglets.
-
-The extract_coefficients.py script extracts the last Cl and Cd values from the simulation output files. It traverses the directories, collects the data, and saves the results to results.dat.
+The software includes a script, extract_coefficients.py, which iterates through all winglet directories and extracts the CL and CD data. 
 
 
 ## Usage Notes
