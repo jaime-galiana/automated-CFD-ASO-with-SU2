@@ -1,14 +1,22 @@
-# Automated Workflow for Geometry Generation, Mesh Generation, CFD Simulation, and ASO
-Final-Year Project in fullfilment with MEng Aeronautics with Spacecraft Engineering
-To be run on Imperial HPC
+
+**Author**: Jaime Galiana Herrera
+
+**Final-Year Project** in fulfillment of MEng Aeronautics with Spacecraft Engineering
+
+**To be run on Imperial HPC**
+
+![Imperial Logo](images/ImperialNewLogo.jpg)
 
 ## Overview
 
 This workflow automates the following steps:
+
 1. **Geometry Generation**: Creating the geometry of the winglet.
 2. **Mesh Generation**: Generating the computational mesh with or without a prism layer.
 3. **CFD Simulation**: Running the Computational Fluid Dynamics (CFD) simulation to analyze the flow.
 4. **ASO**: Running the Aerodynamic Shape Optimization based on CFD results.
+
+![Workflow](images/FLOWCHART.png)
 
 ## Prerequisites
 
