@@ -174,7 +174,7 @@ python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 
 - If ASO is enabled (`-aso 1`), the `run_ASO.py` script runs the shape optimization based on CFD results.
 
 ## Post-Processing
-# Extracting Coefficients
+### Extracting Coefficients
 
 The software includes a script, extract_coefficients.py, which iterates through all winglet directories and extracts the CL and CD data. This script is crucial for analyzing the aerodynamic performance of the winglets.
 
