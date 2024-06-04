@@ -45,6 +45,7 @@ Use the `main_runAutomation.py` script to set up and submit the job. This script
 ### Example Command:
 ```sh
 python main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 1 -cfd 1 -cfd-solver rans -aso 1 -aso-solver rans
+```
 
 ## Step 3: Understanding the Workflow
 
