@@ -1,3 +1,4 @@
+# Automated Workflow for Geometry Generation, Mesh Generation, CFD Simulation, and ASO
 
 **Author**: Jaime Galiana Herrera
 
@@ -6,6 +7,17 @@
 **To be run on Imperial HPC**
 
 ![Imperial Logo](images/ImperialNewLogo.jpg)
+
+## Table of Contents
+1. [Overview](#overview)
+2. [Prerequisites](#prerequisites)
+3. [Preparing the Environment](#step-1-preparing-the-environment)
+4. [Running the Automation Script](#step-2-running-the-automation-script)
+   - [Command-Line Arguments](#command-line-arguments)
+   - [Example Command](#example-command)
+5. [Understanding the Workflow](#step-3-understanding-the-workflow)
+6. [Usage Notes](#usage-notes)
+7. [License](#license)
 
 ## Overview
 
@@ -16,7 +28,7 @@ This workflow automates the following steps:
 3. **CFD Simulation**: Running the Computational Fluid Dynamics (CFD) simulation to analyze the flow.
 4. **ASO**: Running the Aerodynamic Shape Optimization based on CFD results.
 
-![Workflow](images/FLOWCHART.png)
+![Workflow](images/FLOWCHART_white_bg.png)
 
 ## Prerequisites
 
@@ -39,20 +51,23 @@ Ensure you have all the necessary input files:
 Use the `main_runAutomation.py` script to set up and submit the job. This script takes various arguments to control which steps to run and their configurations.
 
 ### Command-Line Arguments:
-- `-np`: Number of parallel processes.
-- `-mem`: Total memory of the process.
-- `-time`: Job time in hours.
-- `-geo`: Run geometry generation (0: No, 1: Yes).
-- `-mesh`: Run mesh generation (0: No, 1: Yes).
-- `-prism-layer`: Include prism layer in mesh (0: No, 1: Yes).
-- `-cfd`: Run CFD (0: No, 1: Yes).
-- `-cfd-solver`: CFD Solver to use (`Euler` or `RANS`).
-- `-aso`: Run ASO (0: No, 1: Yes).
-- `-aso-solver`: ASO Solver to use (`Euler` or `RANS`).
+
+| Argument       | Description                                 |
+|----------------|---------------------------------------------|
+| `-np`          | Number of parallel processes                |
+| `-mem`         | Total memory of the process                 |
+| `-time`        | Job time in hours                           |
+| `-geo`         | Run geometry generation (0: No, 1: Yes)     |
+| `-mesh`        | Run mesh generation (0: No, 1: Yes)         |
+| `-prism-layer` | Include prism layer in mesh (0: No, 1: Yes) |
+| `-cfd`         | Run CFD (0: No, 1: Yes)                     |
+| `-cfd-solver`  | CFD Solver to use (`Euler` or `RANS`)       |
+| `-aso`         | Run ASO (0: No, 1: Yes)                     |
+| `-aso-solver`  | ASO Solver to use (`Euler` or `RANS`)       |
 
 ### Example Command:
 ```sh
-python main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 0 -cfd 1 -cfd-solver euler -aso 1 -aso-solver euler
+python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 0 -cfd 1 -cfd-solver euler -aso 1 -aso-solver euler
 ```
 
 ## Step 3: Understanding the Workflow
@@ -63,7 +78,7 @@ python main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 0
 
 2. Modifying the PBS Script
 
-- The `main_runAutomation.py` script modifies the submit_template.pbs script to include the correct parameters and paths based on the user's input.
+- The `main_runAutomation.py` script modifies the `submit_template.pbs` script to include the correct parameters and paths based on the user's input.
 
 3. Submitting the Job
 
@@ -88,9 +103,13 @@ python main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 0
 
 - If ASO is enabled (`-aso 1`), the `run_ASO.py` script runs the shape optimization based on CFD results.
 
-Usage Notes
+## Usage Notes
 
 - Use the `main_runAutomation.py´ script to set up and submit the job.
 - Ensure the correct directories and input files are in place.
 - The `run_CFD.py` script includes an iterative process to adjust the mesh if the y+ values are too high, but this only applies to the RANS solver.
 - Each script has specific roles and works together to complete the full workflow.
+
+## License
+
+This project is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License - see the [LICENSE](LICENSE) file for details.
