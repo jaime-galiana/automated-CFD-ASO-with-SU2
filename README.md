@@ -32,7 +32,7 @@ This workflow automates the following steps:
 4. **ASO**: Running the Aerodynamic Shape Optimization based on CFD results.
 
 <p align="center">
-  <img src="images/FLOWCHART.jpg" alt="Winglet design process" width="800"/>
+  <img src="images/flowchart.jpg" alt="Winglet design process" width="800"/>
 </p>
 
 ## Prerequisites
