@@ -1,3 +1,5 @@
+![Imperial Logo](images/ImperialNewLogo.jpg)
+
 # Automated Workflow for Geometry Generation, Mesh Generation, CFD Simulation, and ASO
 
 **Author**: Jaime Galiana Herrera
@@ -6,7 +8,6 @@
 
 **To be run on Imperial HPC**
 
-![Imperial Logo](images/ImperialNewLogo.jpg)
 
 ## Table of Contents
 1. [Overview](#overview)
