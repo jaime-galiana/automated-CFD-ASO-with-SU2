@@ -1,4 +1,6 @@
-![Imperial Logo](images/ImperialNewLogo.jpg)
+<p align="center">
+  <img src="images/ImperialNewLogo.jpg" alt="Imperial Logo" width="200"/>
+</p>
 
 # Automated Workflow for Geometry Generation, Mesh Generation, CFD Simulation, and ASO
 
@@ -29,7 +31,10 @@ This workflow automates the following steps:
 3. **CFD Simulation**: Running the Computational Fluid Dynamics (CFD) simulation to analyze the flow.
 4. **ASO**: Running the Aerodynamic Shape Optimization based on CFD results.
 
-![Workflow](images/FLOWCHART.png)
+<p align="center">
+  <img src="images/FLOWCHART.png" alt="Winglet design process" width="200"/>
+</p>
+
 
 ## Prerequisites
 
