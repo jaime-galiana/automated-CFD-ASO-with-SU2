@@ -29,7 +29,7 @@ This workflow automates the following steps:
 3. **CFD Simulation**: Running the Computational Fluid Dynamics (CFD) simulation to analyze the flow.
 4. **ASO**: Running the Aerodynamic Shape Optimization based on CFD results.
 
-![Workflow](images/FLOWCHART_white_bg.png)
+![Workflow](images/FLOWCHART.png)
 
 ## Prerequisites
 
