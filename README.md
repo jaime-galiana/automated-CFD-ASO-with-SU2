@@ -34,10 +34,11 @@ This workflow automates the following steps:
 ## Prerequisites
 
 Ensure all required modules are installed and available in your environment. This includes tools like:
-- `OpenMPI`
-- `star-ccm+`
-- `anaconda3`
-- `SU2`
+- [OpenMPI](https://www.open-mpi.org/)
+- [STAR-CCM+](https://mdx.plm.automation.siemens.com/star-ccm-plus) (v16.04.012-R8)
+- [Anaconda](https://www.anaconda.com/products/distribution)
+- [SU2](https://su2code.github.io/) (v7.2.0 and v8.0.0)
+- [OpenVSP](http://openvsp.org/) (v3.37.0)
 
 ## Step 1: Preparing the Environment
 
@@ -113,4 +114,16 @@ python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 
 
 ## License
 
-This project is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License. You are free to:
+- **Share** — copy and redistribute the material in any medium or format
+- **Adapt** — remix, transform, and build upon the material
+
+The licensor cannot revoke these freedoms as long as you follow the license terms.
+
+Under the following terms:
+- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+- **NonCommercial** — You may not use the material for commercial purposes.
+
+No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+
+View the full license at: [http://creativecommons.org/licenses/by-nc/4.0/](http://creativecommons.org/licenses/by-nc/4.0/)
