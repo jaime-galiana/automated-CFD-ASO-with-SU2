@@ -69,7 +69,7 @@ To set up this project, you need to update all the paths to the respective softw
 
 ### Compiling SU2 with AD Capabilities
 
-To use AD capabilities in SU2 for shape optimization, it is necessary to compile SU2 with these features enabled. Unfortunately, SU2 lacks clear documentation regarding this process, and the compilation can be far from trivial. The following script provides a way to compile the source code on an HPC system with these features enabled.
+To leverage the AD capabilities in SU2 for shape optimization, it is necessary to compile SU2 with these features enabled. Unfortunately, the process of compiling SU2 on an HPC system can be complex and lacks comprehensive documentation. The following script provides a way to compile the source code on the Imperial HPC system with these features enabled.
 
 #### Script to Compile SU2 with AD
 
