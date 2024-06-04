@@ -32,7 +32,7 @@ This workflow automates the following steps:
 4. **ASO**: Running the Aerodynamic Shape Optimization based on CFD results.
 
 <p align="center">
-  <img src="images/FLOWCHART.png" alt="Winglet design process" width="800"/>
+  <img src="images/FLOWCHART.jpg" alt="Winglet design process" width="800"/>
 </p>
 
 ## Prerequisites
@@ -41,7 +41,7 @@ Ensure all required modules are installed and available in your environment. Thi
 - [OpenMPI](https://www.open-mpi.org/)
 - [STAR-CCM+](https://mdx.plm.automation.siemens.com/star-ccm-plus) (v16.04.012-R8)
 - [Anaconda](https://www.anaconda.com/products/distribution)
-- [SU2](https://su2code.github.io/) (v7.2.0 and v8.0.0)
+- [SU2](https://su2code.github.io/) (v7.2.0 and v8.0.0)S
 - [OpenVSP](http://openvsp.org/) (v3.37.0)
 
 ## Step 1: Preparing the Environment
