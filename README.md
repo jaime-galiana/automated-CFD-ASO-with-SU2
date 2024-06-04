@@ -14,7 +14,7 @@
 ## Table of Contents
 1. [Overview](#overview)
 2. [Prerequisites](#prerequisites)
-3. [Setting Up the Process](#setting-up-the-process)
+3. [Setting Up the Problem](#setting-up-the-problem)
    - [Updating Paths](#updating-paths)
    - [Compiling SU2 with AD Capabilities](#compiling-su2-with-ad-capabilities)
 4. [Preparing the Environment](#step-1-preparing-the-environment)
@@ -22,8 +22,10 @@
    - [Command-Line Arguments](#command-line-arguments)
    - [Example Command](#example-command)
 6. [Understanding the Workflow](#step-3-understanding-the-workflow)
-7. [Usage Notes](#usage-notes)
-8. [License](#license)
+7. [Post-Processing](#post-processing)
+   - [Extracting Coefficients](#extracting-coefficients)
+8. [Usage Notes](#usage-notes)
+9. [License](#license)
 
 ## Overview
 
@@ -170,6 +172,14 @@ python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 
 7. Running ASO
 
 - If ASO is enabled (`-aso 1`), the `run_ASO.py` script runs the shape optimization based on CFD results.
+
+## Post-Processing
+# Extracting Coefficients
+
+The software includes a script, extract_coefficients.py, which iterates through all winglet directories and extracts the CL and CD data. This script is crucial for analyzing the aerodynamic performance of the winglets.
+
+The extract_coefficients.py script extracts the last Cl and Cd values from the simulation output files. It traverses the directories, collects the data, and saves the results to results.dat.
+
 
 ## Usage Notes
 
