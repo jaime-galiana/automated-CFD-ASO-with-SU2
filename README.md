@@ -14,13 +14,16 @@
 ## Table of Contents
 1. [Overview](#overview)
 2. [Prerequisites](#prerequisites)
-3. [Preparing the Environment](#step-1-preparing-the-environment)
-4. [Running the Automation Script](#step-2-running-the-automation-script)
+3. [Setting Up the Process](#setting-up-the-process)
+   - [Updating Paths](#updating-paths)
+   - [Compiling SU2 with AD Capabilities](#compiling-su2-with-ad-capabilities)
+4. [Preparing the Environment](#step-1-preparing-the-environment)
+5. [Running the Automation Script](#step-2-running-the-automation-script)
    - [Command-Line Arguments](#command-line-arguments)
    - [Example Command](#example-command)
-5. [Understanding the Workflow](#step-3-understanding-the-workflow)
-6. [Usage Notes](#usage-notes)
-7. [License](#license)
+6. [Understanding the Workflow](#step-3-understanding-the-workflow)
+7. [Usage Notes](#usage-notes)
+8. [License](#license)
 
 ## Overview
 
@@ -44,7 +47,66 @@ Ensure all required modules are installed and available in your environment. Thi
 - [SU2](https://su2code.github.io/) (v7.2.0 and v8.0.0)S
 - [OpenVSP](http://openvsp.org/) (v3.37.0)
 
-## Step 1: Preparing the Environment
+
+
+## Setting Up the Process
+
+### Updating Paths
+
+To set up this project, you need to update all the paths to the respective software and folders. This is done using the `update_paths.py` script. The script updates the paths in specific Python files within your project directory to point to the correct locations of your main folder, OpenVSP, SU2 source files, SU2 compiled binaries, and the output folder. It also replaces a placeholder key in `mesh_generation.py` if necessary.
+
+#### How to Use the `update_paths.py` Script
+
+1. **Save the Script**: Save the `update_paths.py` script in your project directory.
+2. **Make the Script Executable**: If you're on a Unix-like system, make the script executable by running:
+    ```sh
+    chmod +x update_paths.py
+    ```
+3. **Run the Script**: Use the command line to run the script and provide the necessary arguments. Here’s an example:
+    ```sh
+    python3 update_paths.py /path/to/your/project --main /new/path/to/main --openvsp /new/path/to/OpenVSP_v3.37.0_Compiled --su2_v72_src /new/path/to/SU2_v7.2.0_Source --su2_v72_bin /new/path/to/SU2_v7.2.0_Binaries --su2_v80_src /new/path/to/SU2_v8.0.0_Source --su2_v80_bin /new/path/to/SU2_v8.0.0_Binaries --output /new/path/to/main/output --key your_actual_key
+    ```
+
+### Compiling SU2 with AD Capabilities
+
+To use AD capabilities in SU2 for shape optimization, it is necessary to compile SU2 with these features enabled. Unfortunately, SU2 lacks clear documentation regarding this process, and the compilation can be far from trivial. The following script provides a way to compile the source code on an HPC system with these features enabled.
+
+#### Script to Compile SU2 with AD
+
+Save the following script and submit it to your HPC system:
+
+```bash
+#PBS -l walltime=8:00:00
+#PBS -l select=1:ncpus=8:mem=200gb
+
+module load tools/prod
+module load Python/3.10.8-GCCcore-12.2.0
+module load OpenMPI/4.1.4-GCC-12.2.0
+module load CMake/3.24.3-GCCcore-12.2.0
+
+# Environmental variables, not entirely sure if they are needed
+export MPICC=$(which mpicc)
+export MPICXX=$(which mpicxx)
+export CC=mpicc
+export CXX=mpicxx
+
+# Path to folder where you want to place your source code
+cd /rds/general/user/username/home/
+
+# Clone last version of source code in the directory
+git clone https://github.com/su2code/SU2.git
+
+# Access the folder containing the source code
+cd SU2
+
+# --prefix= specify the path where you want the compiled code to be 
+python3 ./meson.py build -Denable-autodiff=true -Denable-directdiff=true -Dwith-mpi=enabled --prefix=/path/to/install/directory
+
+# j defines the number of cores to use (all available cores are used by default)
+./ninja -j8 -C build install
+```	
+
+## Step 2: Preparing the Environment
 
 Ensure you have all the necessary input files:
 - `winggen.vspscript` for geometry generation.
@@ -52,7 +114,7 @@ Ensure you have all the necessary input files:
 - `Euler-cfd.py` and `RANS-cfd.py` for CFD simulation.
 - `Euler-shapeOptimisation.py` and `RANS-shapeOptimisation.py` for ASO.
 
-## Step 2: Running the Automation Script
+## Step 3: Running the Automation Script
 
 Use the `main_runAutomation.py` script to set up and submit the job. This script takes various arguments to control which steps to run and their configurations.
 
@@ -76,7 +138,7 @@ Use the `main_runAutomation.py` script to set up and submit the job. This script
 python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 0 -cfd 1 -cfd-solver euler -aso 1 -aso-solver euler
 ```
 
-## Step 3: Understanding the Workflow
+## Step 4: Understanding the Workflow
 
 1. Setting Up Directories
 
