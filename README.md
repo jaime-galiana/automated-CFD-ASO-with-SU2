@@ -14,7 +14,7 @@
 ## Table of Contents
 1. [Overview](#overview)
 2. [Prerequisites](#prerequisites)
-3. [Setting Up the Problem](#setting-up-the-problem)
+3. [Setting Up the Process](#setting-up-the-problem)
    - [Updating Paths](#updating-paths)
    - [Compiling SU2 with AD Capabilities](#compiling-su2-with-ad-capabilities)
 4. [Preparing the Environment](#step-1-preparing-the-environment)
@@ -176,7 +176,7 @@ python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 
 ## Post-Processing
 ### Extracting Coefficients
 
-The software includes a script, extract_coefficients.py, which iterates through all winglet directories and extracts the CL and CD data. 
+The software includes a script, extract_coefficients.py, which iterates through all winglet directories and extracts the CL and CD data.
 
 
 ## Usage Notes
