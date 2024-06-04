@@ -88,19 +88,6 @@ python main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 0
 
 - If ASO is enabled (`-aso 1`), the `run_ASO.py` script runs the shape optimization based on CFD results.
 
-Summary of Changes in the Scripts
-
-`main_runAutomation.py`
-
-- Sets up the correct parameters and passes the new `PRISM_LAYER` argument.
-- Ensures the correct solver and prism layer settings are used.
-- Modifies the `submit_template.pbs` script dynamically.
-
-`submit_template.pbs`
-
-- Reads the `PRISM_LAYER` variable and passes it to `mesh_generation.py`.
-- Ensures each step runs with the correct parameters.
-
 Usage Notes
 
 - Use the `main_runAutomation.py´ script to set up and submit the job.
