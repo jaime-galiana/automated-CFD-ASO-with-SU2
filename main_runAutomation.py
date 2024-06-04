@@ -22,8 +22,15 @@ def create_directory(path):
     except OSError as e:
         print(f"Error creating directory: {path} - {e}")
 
+def normalize_solver_name(solver):
+    """Normalizes the solver name to the correct format."""
+    solver_mapping = {
+        'euler': 'Euler',
+        'rans': 'RANS'
+    }
+    return solver_mapping.get(solver.lower(), solver)
 
-def modify_script(filename, np, mem, time, cant, sweep):
+def modify_script(filename, np, mem, time, cant, sweep, steps, workdir):
     """Modifies a script by replacing specific lines with new values."""
     try:
         with open(filename, "r") as file:
@@ -34,10 +41,8 @@ def modify_script(filename, np, mem, time, cant, sweep):
                     new_line = f"#PBS -l walltime={time}:00:00"
                 elif "#PBS -l select=1:ncpus=" in stripped_line:
                     new_line = f"#PBS -l select=1:ncpus={np}:mem={mem}gb"
-                elif "geometry_generation.py -c" in stripped_line:
-                    new_line = f"python3 /rds/general/user/jg2219/ephemeral/Final-try/bin/geometry_generation.py -c {cant} -s {sweep}"
-                elif "mesh_generation.py -np" in stripped_line:
-                    new_line = f"python3 /rds/general/user/jg2219/ephemeral/Final-try/bin/mesh_generation.py -np {np}"
+                elif stripped_line.startswith("# Read parameters from environment variables"):
+                    new_line = f'GEO={steps["geo"]}\nMESH={steps["mesh"]}\nCFD={steps["cfd"]}\nCFD_SOLVER={steps["cfd_solver"]}\nASO={steps["aso"]}\nASO_SOLVER={steps["aso_solver"]}\nWORKDIR={workdir}'
                 else:
                     new_line = line
                 replaced_content += new_line + "\n"
@@ -50,7 +55,7 @@ def modify_script(filename, np, mem, time, cant, sweep):
     except Exception as e:
         print(f"Error modifying script: {filename} - {e}")
 
-def main(np, mem, time):
+def main(np, mem, time, steps):
     list_cant = [-120, -105, -90, -75, -60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90, 105, 120]
     list_sweep = [-20, -10, 0, 10, 20]
 
@@ -62,25 +67,32 @@ def main(np, mem, time):
             # Change directory to main
             os.chdir(main_folder)
 
-            # Change to output directory
+            # Change to output directory for the specific configuration
             output_folder = f"output/winglet_c{cant}_s{sweep}"
             create_directory(output_folder)
 
+            # Create subdirectories for each step and solver only when needed
+            if steps['geo'] == 1:
+                create_directory(os.path.join(output_folder, "GEOMETRY"))
+                subprocess.run(['cp', os.path.join(main_folder, "bin/winggen.vspscript"), os.path.join(output_folder, "GEOMETRY", "winggen.vspscript")])
+            if steps['mesh'] == 1:
+                create_directory(os.path.join(output_folder, "MESH"))
+                subprocess.run(['cp', os.path.join(main_folder, "bin/macro.java"), os.path.join(output_folder, "MESH", "macro.java")])
+            if steps['cfd'] == 1:
+                cfd_solver_dir = os.path.join(output_folder, "CFD", steps['cfd_solver'])
+                create_directory(cfd_solver_dir)
+                subprocess.run(['cp', os.path.join(main_folder, f"bin/{steps['cfd_solver']}-cfd.py"), os.path.join(cfd_solver_dir, f"{steps['cfd_solver']}-cfd.py")])
+            if steps['aso'] == 1:
+                aso_solver_dir = os.path.join(output_folder, "ASO", steps['aso_solver'])
+                create_directory(aso_solver_dir)
+                subprocess.run(['cp', os.path.join(main_folder, f"bin/{steps['aso_solver']}-shapeOptimisation.py"), os.path.join(aso_solver_dir, f"{steps['aso_solver']}-shapeOptimisation.py")])
+
             # Copy template to output folder
-            subprocess.run(['cp', os.path.join(main_folder, template_folder), os.path.join(main_folder, output_folder, "submit.pbs")])
+            subprocess.run(['cp', os.path.join(main_folder, template_folder), os.path.join(output_folder, "submit.pbs")])
 
-            # Copy winggen.vspscript file
-            subprocess.run(['cp', os.path.join(main_folder, "bin/winggen.vspscript"), os.path.join(main_folder, output_folder, "winggen.vspscript")])
-
-            # Copy macro file
-            subprocess.run(['cp', os.path.join(main_folder, "bin/macro.java"), os.path.join(main_folder, output_folder, "macro.java")])
-
-            # Copy macro file
-            subprocess.run(['cp', os.path.join(main_folder, "bin/Euler-shapeOptimisation.py"), os.path.join(main_folder, output_folder, "Euler-shapeOptimisation.py")])
-
-            # Change directory to output/wing_c{}_s{}
+            # Change directory to output/winglet_c{cant}_s{sweep}
             os.chdir(output_folder)
-            modify_script("submit.pbs", np, mem, time, cant, sweep)
+            modify_script("submit.pbs", np, mem, time, cant, sweep, steps, output_folder)
 
             try:
                 subprocess.run(["qsub", "submit.pbs"], check=True)
@@ -89,13 +101,34 @@ def main(np, mem, time):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Script to submit batch jobs')
-    parser.add_argument('-np', type=int, help='Number parallel processes')
-    parser.add_argument('-mem', type=int, help='Memory of each process')
-    parser.add_argument('-time', type=int, help='Job time')
+    parser.add_argument('-np', type=int, help='Number of parallel processes')
+    parser.add_argument('-mem', type=int, help='Memory of each process in GB')
+    parser.add_argument('-time', type=int, help='Job time in hours')
+    parser.add_argument('-geo', type=int, choices=[0, 1], help='Run geometry generation (0: No, 1: Yes)')
+    parser.add_argument('-mesh', type=int, choices=[0, 1], help='Run mesh generation (0: No, 1: Yes)')
+    parser.add_argument('-cfd', type=int, choices=[0, 1], help='Run CFD (0: No, 1: Yes)')
+    parser.add_argument('-cfd-solver', type=str, help='CFD Solver to use (Euler or RANS)')
+    parser.add_argument('-aso', type=int, choices=[0, 1], help='Run ASO (0: No, 1: Yes)')
+    parser.add_argument('-aso-solver', type=str, help='ASO Solver to use (Euler or RANS)')
 
     args = parser.parse_args()
 
     if args.np is None or args.mem is None or args.time is None:
-        parser.error("Please provide both -np, -mem and -time arguments.")
+        parser.error("Please provide -np, -mem, and -time arguments.")
 
-    main(args.np, args.mem, args.time)
+    # Normalize solver names
+    if args.cfd_solver:
+        args.cfd_solver = normalize_solver_name(args.cfd_solver)
+    if args.aso_solver:
+        args.aso_solver = normalize_solver_name(args.aso_solver)
+
+    steps = {
+        'geo': args.geo,
+        'mesh': args.mesh,
+        'cfd': args.cfd,
+        'cfd_solver': args.cfd_solver,
+        'aso': args.aso,
+        'aso_solver': args.aso_solver
+    }
+
+    main(args.np, args.mem, args.time, steps)

@@ -11,7 +11,7 @@ import os
 import sys
 import argparse
 
-def main(np):
+def main(np, input_dir, output_dir):
     """
     Main function to set up and run the meshing process with STAR-CCM+.
 
@@ -19,6 +19,8 @@ def main(np):
     np (int): Number of processes to run in parallel.
     """
     try:
+        os.chdir(output_dir)
+
         # Remove existing files if they exist
         if os.path.exists('./mesh.cga'):
             os.remove('./mesh.cga')
@@ -27,18 +29,17 @@ def main(np):
             os.remove('./star@meshed.sim')
 
         # Check for input STEP file
-        if os.path.exists('./wing.stp'):
-            print("Meshing... ")
+        input_file = os.path.join(input_dir, 'wing.stp')
+        if os.path.exists(input_file):
             # Run STAR-CCM+ command
-            cmd_str = "starccm+ -batch ./macro.java -power -podkey KEY -licpath 1999@flex.cd-adapco.com -np {0}".format(np)
+            cmd_str = f"starccm+ -batch ./macro.java -power -podkey KEY -licpath 1999@flex.cd-adapco.com -np {np}"
             subprocess.run(cmd_str, shell=True)
 
             # Wait until the mesh file is generated
             while not os.path.exists('./mesh.cga'):
                 pass
-
         else:
-            print("Input file 'wing.stp' not found. Please provide the input file.")
+            print(f"Input file '{input_file}' not found. Please provide the input file.")
             sys.exit(1)  # Exit if input file is missing
 
     except Exception as e:
@@ -48,9 +49,11 @@ def main(np):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Number of cores to run in parallel')
     parser.add_argument('-np', type=int, help='Number of processes')
+    parser.add_argument('-i', '--input', type=str, help='Input directory', default='.')
+    parser.add_argument('-o', '--output', type=str, help='Output directory', default='.')
     args = parser.parse_args()
 
     if args.np is None:
         parser.error("Please provide an integer as number of processes to run in parallel")
 
-    main(args.np)
+    main(args.np, args.input, args.output)

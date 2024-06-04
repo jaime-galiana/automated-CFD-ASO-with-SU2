@@ -8,7 +8,6 @@
 
 import os
 import subprocess
-from subprocess import PIPE
 import numpy as np
 import sys
 import argparse
@@ -78,17 +77,8 @@ def blended_span_distribution(cant):
     """
     return round(0.01/9 * abs(cant) + 0.1, 4)
 
-def main(cant, sweep):
-    """
-    Generate wing geometry including blended winglet.
-
-    Parameters:
-        cant (float): Cant angle for the winglet (degrees).
-        sweep (float): Sweep angle for the winglet (degrees).
-
-    Returns:
-        .step: wing.stp
-    """
+def main(cant, sweep, output_dir):
+    """Generate wing geometry including blended winglet."""
     # Wing parameters
     span_total = 3.536  # meters
     span_blend = blended_span_distribution(cant)  # meters
@@ -104,12 +94,13 @@ def main(cant, sweep):
     winglet_taper_ratio = 0.2
     new_blended_chord_tip = chord_distribution(span_blend, span_blend + span_winglet, new_wing_chord_tip, new_wing_chord_tip * winglet_taper_ratio)  # meters
 
-    if not os.path.exists('./winggen.vspscript'):
+    script_path = os.path.join(output_dir, 'winggen.vspscript')
+    if not os.path.exists(script_path):
         print("No winggen.vspscript file found")
         sys.exit()
 
     # Update script with new parameters
-    with open("./winggen.vspscript", "r") as file:
+    with open(script_path, "r") as file:
         replaced_content = ""
         for line in file:
             if "'Tip_Chord', 'XSec_1'" in line.strip():
@@ -138,20 +129,21 @@ def main(cant, sweep):
                 new_line = line.strip()
             replaced_content += new_line + "\n"
 
-    with open("./winggen.vspscript", "w") as write_file:
+    with open(script_path, "w") as write_file:
         write_file.write(replaced_content)
 
     # Run OpenVSP script
-    cmd_str = "/path/to/OpenVSP-3.37.0-Linux/vspscript -script ./winggen.vspscript"
+    cmd_str = f"/path/to/OpenVSP-3.37.0-Linux/vspscript -script {script_path}"
     subprocess.run(cmd_str, shell=True)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate wing geometry with specified cant and sweep.')
     parser.add_argument('-c', '--cant', type=float, help='Cant angle (degrees)')
     parser.add_argument('-s', '--sweep', type=float, help='Sweep angle (degrees)')
+    parser.add_argument('-o', '--output', type=str, help='Output directory', default='.')
     args = parser.parse_args()
 
     if args.cant is None or args.sweep is None:
         parser.error("Provide both cant and sweep values using -c/--cant and -s/--sweep")
 
-    main(args.cant, args.sweep)
+    main(args.cant, args.sweep, args.output)
