@@ -15,28 +15,29 @@ conda activate envFYP
 # Read parameters from environment variables
 GEO=$1
 MESH=$2
-CFD=$3
-CFD_SOLVER=$4
-ASO=$5
-ASO_SOLVER=$6
-WORKDIR=$7
+PRISM_LAYER=$3
+CFD=$4
+CFD_SOLVER=$5
+ASO=$6
+ASO_SOLVER=$7
+WORKDIR=$8
 
 # Run the geometry generation if specified
 if [ $GEO -eq 1 ]; then
-    time python3 $WORKDIR/GEOMETRY/winggen.vspscript -c 0 -s 0
+    time python3 $WORKDIR/GEOMETRY/winggen.vspscript -c 0 -s 0 -o $WORKDIR/GEOMETRY
 fi
 
 # Run the mesh generation if specified
 if [ $MESH -eq 1 ]; then
-    time python3 $WORKDIR/MESH/macro.java -np 8
+    time python3 $WORKDIR/MESH/mesh_generation.py -np 8 -i $WORKDIR/GEOMETRY -o $WORKDIR/MESH -pl $PRISM_LAYER
 fi
 
 # Run the CFD if specified
 if [ $CFD -eq 1 ]; then
-    time python3 $WORKDIR/CFD/$CFD_SOLVER/$CFD_SOLVER-cfd.py $CFD_SOLVER $WORKDIR/MESH
+    time python3 $WORKDIR/CFD/$CFD_SOLVER/run_CFD.py $CFD_SOLVER $WORKDIR
 fi
 
 # Run the ASO if specified
 if [ $ASO -eq 1 ]; then
-    time python3 $WORKDIR/ASO/$ASO_SOLVER/$ASO_SOLVER-shapeOptimisation.py $WORKDIR/$ASO_SOLVER
+    time python3 $WORKDIR/ASO/$ASO_SOLVER/run_ASO.py $ASO_SOLVER $WORKDIR
 fi

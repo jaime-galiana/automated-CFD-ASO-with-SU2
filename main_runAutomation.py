@@ -42,7 +42,7 @@ def modify_script(filename, np, mem, time, cant, sweep, steps, workdir):
                 elif "#PBS -l select=1:ncpus=" in stripped_line:
                     new_line = f"#PBS -l select=1:ncpus={np}:mem={mem}gb"
                 elif stripped_line.startswith("# Read parameters from environment variables"):
-                    new_line = f'GEO={steps["geo"]}\nMESH={steps["mesh"]}\nCFD={steps["cfd"]}\nCFD_SOLVER={steps["cfd_solver"]}\nASO={steps["aso"]}\nASO_SOLVER={steps["aso_solver"]}\nWORKDIR={workdir}'
+                    new_line = f'GEO={steps["geo"]}\nMESH={steps["mesh"]}\nPRISM_LAYER={steps["prism_layer"]}\nCFD={steps["cfd"]}\nCFD_SOLVER={steps["cfd_solver"]}\nASO={steps["aso"]}\nASO_SOLVER={steps["aso_solver"]}\nWORKDIR={workdir}'
                 else:
                     new_line = line
                 replaced_content += new_line + "\n"
@@ -56,6 +56,11 @@ def modify_script(filename, np, mem, time, cant, sweep, steps, workdir):
         print(f"Error modifying script: {filename} - {e}")
 
 def main(np, mem, time, steps):
+    if steps['cfd_solver'] == 'RANS' and steps['prism_layer'] != 1:
+        raise ValueError("RANS solver requires the mesh to be generated with a prism layer. Please set -prism-layer to 1.")
+    if steps['cfd_solver'] == 'Euler' and steps['prism_layer'] != 0:
+        raise ValueError("Euler solver requires the mesh to be generated without a prism layer. Please set -prism-layer to 0.")
+
     list_cant = [-120, -105, -90, -75, -60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90, 105, 120]
     list_sweep = [-20, -10, 0, 10, 20]
 
@@ -77,7 +82,8 @@ def main(np, mem, time, steps):
                 subprocess.run(['cp', os.path.join(main_folder, "bin/winggen.vspscript"), os.path.join(output_folder, "GEOMETRY", "winggen.vspscript")])
             if steps['mesh'] == 1:
                 create_directory(os.path.join(output_folder, "MESH"))
-                subprocess.run(['cp', os.path.join(main_folder, "bin/macro.java"), os.path.join(output_folder, "MESH", "macro.java")])
+                macro_file = "macro_with_prism.java" if steps['prism_layer'] == 1 else "macro_without_prism.java"
+                subprocess.run(['cp', os.path.join(main_folder, "bin", macro_file), os.path.join(output_folder, "MESH", "macro.java")])
             if steps['cfd'] == 1:
                 cfd_solver_dir = os.path.join(output_folder, "CFD", steps['cfd_solver'])
                 create_directory(cfd_solver_dir)
@@ -106,6 +112,7 @@ if __name__ == "__main__":
     parser.add_argument('-time', type=int, help='Job time in hours')
     parser.add_argument('-geo', type=int, choices=[0, 1], help='Run geometry generation (0: No, 1: Yes)')
     parser.add_argument('-mesh', type=int, choices=[0, 1], help='Run mesh generation (0: No, 1: Yes)')
+    parser.add_argument('-prism-layer', type=int, choices=[0, 1], help='Include prism layer in mesh (0: No, 1: Yes)')
     parser.add_argument('-cfd', type=int, choices=[0, 1], help='Run CFD (0: No, 1: Yes)')
     parser.add_argument('-cfd-solver', type=str, help='CFD Solver to use (Euler or RANS)')
     parser.add_argument('-aso', type=int, choices=[0, 1], help='Run ASO (0: No, 1: Yes)')
@@ -125,6 +132,7 @@ if __name__ == "__main__":
     steps = {
         'geo': args.geo,
         'mesh': args.mesh,
+        'prism_layer': args.prism_layer,
         'cfd': args.cfd,
         'cfd_solver': args.cfd_solver,
         'aso': args.aso,

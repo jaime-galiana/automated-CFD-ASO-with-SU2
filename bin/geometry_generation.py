@@ -43,8 +43,8 @@ def wingspan_distribution(span_total, span_blend, span_winglet, cant_blend, cant
     """
     cant_blend = np.radians(cant_blend)
     cant_winglet = np.radians(cant_winglet)
-    projected_span_blend = span_blend*np.cos(cant_blend)
-    projected_span_winglet = span_winglet*np.cos(cant_winglet)
+    projected_span_blend = span_blend * np.cos(cant_blend)
+    projected_span_winglet = span_winglet * np.cos(cant_winglet)
     if -np.radians(90) <= cant_winglet <= np.radians(90):
         return round(span_total - projected_span_blend - projected_span_winglet, 4)
     else:

@@ -6,10 +6,10 @@
     Description: Automates the execution of SU2 shape optimization process.
 """
 
+import subprocess
 import os
 import sys
 import argparse
-import subprocess
 
 def main():
     """Main function to set up and run SU2 shape optimization."""
@@ -29,6 +29,15 @@ def main():
         # Define the working directory
         work_dir = os.path.join(args.directory, 'ASO', args.solver)
         os.makedirs(work_dir, exist_ok=True)
+
+        # Check for input mesh file in the MESH directory
+        mesh_file = os.path.join(args.directory, 'MESH', 'mesh.cga')
+        if not os.path.exists(mesh_file):
+            print(f"Input mesh file '{mesh_file}' not found. Please generate the mesh first.")
+            sys.exit(1)  # Exit if input file is missing
+
+        # Copy the mesh file to the working directory
+        subprocess.run(['cp', mesh_file, work_dir])
 
         # Check for configuration file
         cfg_file = os.path.join(args.directory, 'ASO', args.solver, f'{args.solver.lower()}-shapeOptimisation.py')
@@ -52,8 +61,8 @@ def main():
             cmd_str = f"python3 /path/to/SU2/Compiled-v8.0.0/bin/shape_optimization.py -n 48 -g DISCRETE_ADJOINT -f {cfg_file}"
             subprocess.run(cmd_str, cwd=work_dir, shell=True)
         else:
-            print(f"Input file '{cfg_file}' not found. Please provide the configuration file.")
-            sys.exit(1)  # Exit if input file is missing
+            print(f"Input configuration file '{cfg_file}' not found. Please provide the configuration file.")
+            sys.exit(1)  # Exit if configuration file is missing
 
     except Exception as e:
         print("An error occurred:", e)
