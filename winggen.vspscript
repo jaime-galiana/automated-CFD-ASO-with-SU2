@@ -1,0 +1,165 @@
+
+
+void main()
+{
+string wid = AddGeom( 'WING' , '');
+
+InsertXSec( wid, 1, XS_FILE_AIRFOIL );
+InsertXSec( wid, 1, XS_FILE_AIRFOIL );
+
+
+string xsec_surf = GetXSecSurf( wid, 1 );
+ChangeXSecShape( xsec_surf, 0, XS_FILE_AIRFOIL );
+string xsec = GetXSec( xsec_surf, 0);
+
+string xsec_surf2 = GetXSecSurf( wid, 1 );
+ChangeXSecShape( xsec_surf2, 1, XS_FILE_AIRFOIL );
+string xsec2 = GetXSec( xsec_surf2, 1);
+
+string xsec_surf3 = GetXSecSurf( wid, 1 );
+ChangeXSecShape( xsec_surf3, 2, XS_FILE_AIRFOIL );
+string xsec3 = GetXSec( xsec_surf3, 2);
+
+string xsec_surf4 = GetXSecSurf( wid, 1 );
+ChangeXSecShape( xsec_surf4, 3, XS_FILE_AIRFOIL );
+string xsec4 = GetXSec( xsec_surf4, 3);
+
+ReadFileAirfoil( xsec, '/rds/general/user/jg2219/ephemeral/Final-try/bin/e387.af' );
+ReadFileAirfoil( xsec2, '/rds/general/user/jg2219/ephemeral/Final-try/bin/e387.af' );
+ReadFileAirfoil( xsec3, '/rds/general/user/jg2219/ephemeral/Final-try/bin/e387.af' );
+ReadFileAirfoil( xsec4, '/rds/general/user/jg2219/ephemeral/Final-try/bin/e387.af' );
+
+array< vec3d > @up_array = GetAirfoilUpperPnts( xsec );
+array< vec3d > @low_array = GetAirfoilLowerPnts( xsec );
+
+array< vec3d > @up_array2 = GetAirfoilUpperPnts( xsec2 );
+array< vec3d > @low_array2 = GetAirfoilLowerPnts( xsec2 );
+
+array< vec3d > @up_array3 = GetAirfoilUpperPnts( xsec3 );
+array< vec3d > @low_array3 = GetAirfoilLowerPnts( xsec3 );
+
+array< vec3d > @up_array4 = GetAirfoilUpperPnts( xsec4 );
+array< vec3d > @low_array4 = GetAirfoilLowerPnts( xsec4 );
+
+SetAirfoilPnts( xsec, up_array, low_array );
+Update();
+
+SetAirfoilPnts( xsec2, up_array2, low_array2 );
+Update();
+
+SetAirfoilPnts( xsec3, up_array3, low_array3);
+Update();
+
+SetAirfoilPnts( xsec4, up_array4, low_array4);
+Update();
+
+SetParmVal(  wid, 'Root_Chord', 'XSec_1', 0.4713 );
+SetParmVal(  wid, 'Tip_Chord', 'XSec_1', 0.2273 );
+SetParmVal(  wid, 'Sweep', 'XSec_1', 20.0 );
+SetParmVal(  wid, 'Span', 'XSec_1', 3.6628 );
+SetParmVal(  wid, 'ThickChord', 'XSecCurve_1', 0.1);
+SetParmVal(  wid, 'SectTess_U', 'XSec_1', 60); // Number of sections
+SetParmVal(  wid, 'OutLEMode', 'XSec_1', BLEND_MATCH_IN_LE_TRAP );
+SetParmVal(  wid, 'OutTEMode', 'XSec_1', BLEND_MATCH_IN_TE_TRAP );
+SetParmVal(  wid, 'OutTEStrength', 'XSec_1', 1 );
+SetParmVal(  wid, 'OutLEStrength', 'XSec_1', 1 );
+SetParmVal(  wid, 'TE_Cap_Type', 'Cap_1', ROUND_END_CAP);
+SetParmVal(  wid, 'TE_Cap_Type', 'Cap_0', ROUND_END_CAP);
+SetParmVal(  wid, 'TE_Close_AbsRel', 'Close_0', ABS);
+SetParmVal(  wid, 'TE_Close_Type', 'Close_0', CLOSE_SKEWBOTH);
+SetParmVal(  wid, 'TE_Close_Thick', 'Close_0', 0.00159);
+SetParmVal(  wid, 'TE_Close_AbsRel', 'Close_1', ABS);
+SetParmVal(  wid, 'TE_Close_Type', 'Close_1', CLOSE_SKEWBOTH);
+SetParmVal(  wid, 'TE_Close_Thick', 'Close_1', 0.00159);
+Update();
+
+
+SetParmVal(  wid, 'Root_Chord', 'XSec_2', 0.2273 );
+SetParmVal(  wid, 'Tip_Chord', 'XSec_2', 0.2 );
+SetParmVal(  wid, 'Sweep', 'XSec_2', 0.0 );
+SetParmVal(  wid, 'Dihedral', 'XSec_2', 0.0 );
+SetParmVal(  wid, 'Span', 'XSec_2', 0.1);
+SetParmVal(  wid, 'ThickChord', 'XSecCurve_2', 0.1);
+SetParmVal(  wid, 'Theta', 'XSecCurve_2', 0);
+SetParmVal(  wid, 'RotateMatchDideralFlag', 'XSec_2', 1);
+SetParmVal(  wid, 'SectTess_U', 'XSec_2', 40);
+SetParmVal(  wid, 'InLEMode', 'XSec_2', BLEND_MATCH_OUT_LE_TRAP );
+SetParmVal(  wid, 'InTEMode', 'XSec_2', BLEND_MATCH_OUT_TE_TRAP );
+SetParmVal(  wid, 'InTEStrength', 'XSec_2', 1 );
+SetParmVal(  wid, 'InLEStrength', 'XSec_2', 1 );
+SetParmVal(  wid, 'TE_Cap_Type', 'Cap_2', ROUND_END_CAP);
+SetParmVal(  wid, 'TE_Close_AbsRel', 'Close_2', ABS);
+SetParmVal(  wid, 'TE_Close_Type', 'Close_2', CLOSE_SKEWBOTH);
+SetParmVal(  wid, 'TE_Close_Thick', 'Close_2', 0.00159);
+Update();
+
+SetParmVal(  wid, 'Root_Chord', 'XSec_3', 0.2 );
+SetParmVal(  wid, 'Tip_Chord', 'XSec_3', 0.04 );
+SetParmVal(  wid, 'Sweep', 'XSec_3', 0.0 );
+SetParmVal(  wid, 'Dihedral', 'XSec_3', 0.0 );
+SetParmVal(  wid, 'Span', 'XSec_3', 0.3536);
+SetParmVal(  wid, 'ThickChord', 'XSecCurve_3', 0.1);
+SetParmVal(  wid, 'RotateMatchDideralFlag', 'XSec_3', 1);
+SetParmVal(  wid, 'SectTess_U', 'XSec_3', 40);
+SetParmVal(  wid, 'CapUMaxOption', 'EndCap', FLAT_END_CAP);
+SetParmVal(  wid, 'CapUMinTess', 'EndCap', 15);
+SetParmVal(  wid, 'TE_Cap_Type', 'Cap_3', ROUND_END_CAP);
+SetParmVal(  wid, 'TE_Close_AbsRel', 'Close_3', ABS);
+SetParmVal(  wid, 'TE_Close_Type', 'Close_3', CLOSE_SKEWBOTH);
+SetParmVal(  wid, 'TE_Close_Thick', 'Close_3', 0.00159);
+SetParmVal(  wid, 'Tess_W', 'Shape', 133);
+Update();
+
+SetParmVal(  wid, 'RotateAirfoilMatchDideralFlag', 'WingGeom', 1);
+SetParmVal(  wid, 'CorrectAirfoilthicknessFlag', 'WingGeom', 1);
+Update();
+
+
+AnalysisandExport();
+
+//==== Check For API Errors ====//
+while ( GetNumTotalErrors() > 0 )
+{
+ErrorObj err = PopLastError();
+Print( err.GetErrorString() );
+}
+
+}
+
+void AnalysisandExport()
+{
+string analysis = 'SurfaceIntersection';
+
+// Set defaults
+SetAnalysisInputDefaults( analysis );
+
+// list inputs, type, and current values
+PrintAnalysisInputs( analysis );
+
+// Set some analysis inputs
+array < int > no_flag;
+no_flag.push_back( 0 );
+SetIntAnalysisInput( analysis, 'CURVFileFlag', no_flag, 0 );
+SetIntAnalysisInput( analysis, 'SRFFileFlag', no_flag, 0 );
+SetIntAnalysisInput( analysis, 'P3DFileFlag', no_flag, 0 );
+
+
+array < string > step_name;
+step_name.push_back( 'wing.stp' );
+SetStringAnalysisInput( analysis, 'STEPFileName', step_name );
+
+SetIntAnalysisInput( analysis, 'CADLabelSplitNo', no_flag, 0 );
+
+array < int > units;
+units.push_back( LEN_M );
+SetIntAnalysisInput( analysis, 'CADLenUnit', units, 0 );
+
+string surf_id = FindContainer( 'SurfaceIntersectSettings', 0 );
+SetParmVal( FindParm(surf_id, 'IntersectSubSurfs', 'Global' ), 1 );
+SetParmVal( FindParm(surf_id, 'RelCurveTol', 'Global' ), 0.0005 );
+SetParmVal( FindParm( surf_id, 'STEPRepresentation', 'ExportIntersect' ), STEP_BREP );
+
+
+Print( '\tExecuting...' );
+string resid = ExecAnalysis( analysis );
+}

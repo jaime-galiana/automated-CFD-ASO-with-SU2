@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -l walltime=8:00:00
+#PBS -l select=1:ncpus=8:mem=32gb
+
+module load tools/prod
+module load OpenMPI/4.1.4-GCC-12.2.0
+module load star-ccm/16.04.012-R8
+module load anaconda3/personal
+
+cd $PBS_O_WORKDIR
+
+source activate
+conda activate envFYP
+
+python3 /rds/general/user/jg2219/ephemeral/Final-try/bin/geometry_generation.py -c 0 -s 0
+python3 /rds/general/user/jg2219/ephemeral/Final-try/bin/mesh_generation.py -np 8
+time python3 /rds/general/user/jg2219/ephemeral/Final-try/bin/run_CFD.py
