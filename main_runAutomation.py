@@ -1,14 +1,14 @@
 """
-Code part of FYP: "Aerodynamic shape optimization of wings with compliant winglets"
+    Code part of FYP: "Automated aerodynamic shape optimisation of winglets with SU2 on Imperial HPC cluster"
 
-Author: Jaime Galiana Herrera
-Date: 2024-02-01
+    Author: Jaime Galiana Herrera
+    Date: 2024-02-01
 
-Script for automated generation of wing geometry with OpenVSP, mesh with StarCCM+, CFD simulation on SU2 and ASO on SU2 using discrete-adjoint.
+    Script for automated generation of wing geometry with OpenVSP, mesh with StarCCM+, CFD simulation on SU2 and ASO on SU2 using discrete-adjoint.
 
-Input:  -np: number of processors to run in parallel.
-        -mem: memory to request to HPC
-        -time: walltime to request to HPC
+    Input:  -np: number of processors to run in parallel.
+            -mem: memory to request to HPC
+            -time: walltime to request to HPC
 """
 
 import os

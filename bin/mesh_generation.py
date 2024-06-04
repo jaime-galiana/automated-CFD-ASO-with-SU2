@@ -1,4 +1,10 @@
-#Script for the automation of mesh generation on Star-CCM+ designed to run on the Imperial College London RCS HPC system
+"""
+    FYP: Automated aerodynamic shape optimisation of winglets with SU2 on Imperial HPC cluster
+
+    Author: Jaime Galiana Herrera
+    Date: 2024-02-01
+    Description: Automates the meshing process using STAR-CCM+. 
+"""
 
 import subprocess
 import os
@@ -6,32 +12,38 @@ import sys
 import argparse
 
 def main(np):
+    """
+    Main function to set up and run the meshing process with STAR-CCM+.
+
+    Parameters:
+    np (int): Number of processes to run in parallel.
+    """
     try:
-        # Check and remove existing files
+        # Remove existing files if they exist
         if os.path.exists('./mesh.cga'):
             os.remove('./mesh.cga')
 
         if os.path.exists('./star@meshed.sim'):
             os.remove('./star@meshed.sim')
 
-        # Check if input file exists
+        # Check for input STEP file
         if os.path.exists('./wing.stp'):
             print("Meshing... ")
             # Run STAR-CCM+ command
-            cmd_str = "starccm+ -batch ./macro.java -power -podkey dKplKc2NAEVUlBALKVUwPA -licpath 1999@flex.cd-adapco.com -np {0}".format(np)
+            cmd_str = "starccm+ -batch ./macro.java -power -podkey KEY -licpath 1999@flex.cd-adapco.com -np {0}".format(np)
             subprocess.run(cmd_str, shell=True)
 
-            # Check if mesh file is generated
+            # Wait until the mesh file is generated
             while not os.path.exists('./mesh.cga'):
-                pass  # Wait until the mesh file is generated
+                pass
 
         else:
             print("Input file 'wing.stp' not found. Please provide the input file.")
-            sys.exit(1)  # Exit with error code 1 if input file is missing
+            sys.exit(1)  # Exit if input file is missing
 
     except Exception as e:
         print("An error occurred:", e)
-        sys.exit(1)  # Exit with error code 1 if an exception occurs
+        sys.exit(1)  # Exit if an exception occurs
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Number of cores to run in parallel')

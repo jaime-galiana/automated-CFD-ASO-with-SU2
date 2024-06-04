@@ -12,6 +12,7 @@ cd $PBS_O_WORKDIR
 source activate
 conda activate envFYP
 
-python3 /rds/general/user/jg2219/ephemeral/Final-try/bin/geometry_generation.py -c 0 -s 0
-python3 /rds/general/user/jg2219/ephemeral/Final-try/bin/mesh_generation.py -np 8
-time python3 /rds/general/user/jg2219/ephemeral/Final-try/bin/run_CFD.py
+time python3 /path/to/main/bin/geometry_generation.py -c 0 -s 0
+time python3 /path/to/main/bin/mesh_generation.py -np 8
+time python3 /path/to/main/bin/run_CFD.py
+time python3 /path/to/main/bin/run_ASO.py
