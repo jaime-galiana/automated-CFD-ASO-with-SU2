@@ -32,7 +32,7 @@ Use the `main_runAutomation.py` script to set up and submit the job. This script
 
 ### Command-Line Arguments:
 - `-np`: Number of parallel processes.
-- `-mem`: Memory of each process in GB.
+- `-mem`: Total memory of the process.
 - `-time`: Job time in hours.
 - `-geo`: Run geometry generation (0: No, 1: Yes).
 - `-mesh`: Run mesh generation (0: No, 1: Yes).
