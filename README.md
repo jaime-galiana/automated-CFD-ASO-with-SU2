@@ -120,7 +120,8 @@ To run `update_paths.py`, the bash script `submit_updatePaths.pbs` is included i
 **Modify the pbs Script**:
 Modify the following paths and Star+CCM+ key with you actual values.
 
-```python3 ./update_paths.py /path/to/your/project \
+```
+python3 ./update_paths.py /path/to/your/project \
     --main /new/path/to/main \
     --openvsp /new/path/to/OpenVSP_v3.37.0_Compiled \
     --su2_v72_src /new/path/to/SU2_v7.2.0_Source \
