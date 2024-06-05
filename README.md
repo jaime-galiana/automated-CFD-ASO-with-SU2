@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/ImperialNewLogo.jpg" alt="Imperial Logo" width="500"/>
+  <img src="images/ImperialNewLogo.png" alt="Imperial Logo" width="500"/>
 </p>
 
 # Automated Workflow for Geometry Generation, Mesh Generation, CFD Simulation, and ASO
@@ -37,7 +37,7 @@ This workflow automates the following steps:
 4. **ASO**: Running the Aerodynamic Shape Optimization based on CFD results.
 
 <p align="center">
-  <img src="images/flowchart.jpg" alt="Winglet design process" width="800"/>
+  <img src="images/flowchart.png" alt="Winglet design process" width="800"/>
 </p>
 
 ## Prerequisites
@@ -45,11 +45,53 @@ This workflow automates the following steps:
 Ensure all required modules are installed and available in your environment. This includes tools like:
 - [OpenMPI](https://www.open-mpi.org/)
 - [STAR-CCM+](https://mdx.plm.automation.siemens.com/star-ccm-plus) (v16.04.012-R8)
-- [Anaconda](https://www.anaconda.com/products/distribution)
 - [SU2](https://su2code.github.io/) (v7.2.0 and v8.0.0)S
 - [OpenVSP](http://openvsp.org/) (v3.37.0)
+- [Anaconda](https://www.anaconda.com/products/distribution)
 
 ## Setting Up the Process
+
+### Set up Python environment (Anaconda)
+To run this project on the HPC you need to set up a Python environment with the following libraries:
+- numpy
+– argparse
+– scipy
+- vtk
+
+## Step 1: Prepare the Environment Setup Script
+
+A bash script (`setup_env.sh`) should be created to set up the Anaconda environment and install the required libraries. The script includes commands to create the environment and install the necessary packages: `numpy`, `scipy`, `vtk`, and `argparse`. The libraries `os`, `sys`, `subprocess`, and `math` are part of the Python standard library and do not require separate installation.
+
+## Step 2: Submit the Environment Setup Script
+
+Use the `submit_setupPythonEnv.py` script to submit the environment setup script to the job scheduler. Ensure the `submit_setupPythonEnv.py` script is properly configured with the job scheduler commands and paths.
+
+## Usage
+
+To submit the environment setup script, follow these steps:
+
+1. **Make sure the environment setup script is executable:**
+
+    ```bash
+    chmod +x setup_env.sh
+    ```
+
+2. **Submit the script using the `submit_setupPythonEnv.py`:**
+
+    ```bash
+    python submit_setupPythonEnv.py
+    ```
+
+The `submit_setupPythonEnv.py` script will handle the submission process according to the configured job scheduler settings. Once the job is completed, the specified Anaconda environment will be ready with all the required libraries installed.
+
+## Additional Notes
+
+- Ensure that you have the necessary permissions to submit jobs on the HPC system.
+- Verify that the `submit_setupPythonEnv.py` script is correctly pointing to the `setup_env.sh` script and configured according to your system's job scheduler requirements.
+- Monitor the job submission system for any issues or logs related to the job to ensure the environment is set up correctly.
+
+This process simplifies the setup of a consistent Python environment across different systems, ensuring all necessary libraries are installed and available for your project.
+
 
 ### Updating Paths
 

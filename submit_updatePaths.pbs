@@ -2,11 +2,40 @@
 #PBS -l walltime=01:00:00
 #PBS -l select=1:ncpus=1:mem=32gb
 
+# FYP: "Automated aerodynamic shape optimisation of winglets with SU2 on Imperial HPC cluster"
+# Author: Jaime Galiana Herrera
+# Date: 2024-06-03
+
+# Description: This script updates all the necessary paths for setting up the automation tool 
+#              in the user's home directory. It activates the specified Anaconda environment 
+#              and runs the update_paths.py script with the provided paths and key.
+#
+# Inputs required:
+# - /path/to/your/project: The path to your project directory.
+# - --main: The new path to the main directory.
+# - --openvsp: The new path to the OpenVSP directory.
+# - --su2_v72_src: The new path to the SU2 v7.2.0 source directory.
+# - --su2_v72_bin: The new path to the SU2 v7.2.0 binaries directory.
+# - --su2_v80_src: The new path to the SU2 v8.0.0 source directory.
+# - --su2_v80_bin: The new path to the SU2 v8.0.0 binaries directory.
+# - --output: The new path to the output directory.
+# - --key: Your actual key for the automation tool.
+
 module load anaconda3/personal
 
 cd $PBS_O_WORKDIR
 
+# Activate the Anaconda environment
 source activate
 conda activate envFYP
 
-python3 ./update_paths.py /path/to/your/project --main /new/path/to/main --openvsp /new/path/to/OpenVSP_v3.37.0_Compiled --su2_v72_src /new/path/to/SU2_v7.2.0_Source --su2_v72_bin /new/path/to/SU2_v7.2.0_Binaries --su2_v80_src /new/path/to/SU2_v8.0.0_Source --su2_v80_bin /new/path/to/SU2_v8.0.0_Binaries --output /new/path/to/main/output --key your_actual_key
+# Run the update_paths.py script with the specified arguments
+python3 ./update_paths.py /path/to/your/project \
+    --main /new/path/to/main \
+    --openvsp /new/path/to/OpenVSP_v3.37.0_Compiled \
+    --su2_v72_src /new/path/to/SU2_v7.2.0_Source \
+    --su2_v72_bin /new/path/to/SU2_v7.2.0_Binaries \
+    --su2_v80_src /new/path/to/SU2_v8.0.0_Source \
+    --su2_v80_bin /new/path/to/SU2_v8.0.0_Binaries \
+    --output /new/path/to/main/output \
+    --key your_actual_key

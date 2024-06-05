@@ -2,11 +2,23 @@
 #PBS -l walltime=01:00:00
 #PBS -l select=1:ncpus=1:mem=32gb
 
+# FYP: "Automated aerodynamic shape optimisation of winglets with SU2 on Imperial HPC cluster"
+# Author: Jaime Galiana Herrera
+# Date: 2024-06-03
+
+# Description: This script activates the specified Anaconda environment and runs the 
+#              extractCoefficients.py script to extract aerodynamic coefficients from the simulation results.
+#
+# Inputs required:
+# - None.
+
 module load anaconda3/personal
 
 cd $PBS_O_WORKDIR
 
+# Activate the Anaconda environment
 source activate
 conda activate envFYP
 
+# Run the extractCoefficients.py script
 python3 ./bin/extractCoefficients.py
