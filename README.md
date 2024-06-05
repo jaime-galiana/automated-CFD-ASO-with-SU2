@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/ImperialNewLogo.png" alt="Imperial Logo" width="500"/>
+  <img src="images/Imperial_College_Logo.png" alt="Imperial Logo" width="500"/>
 </p>
 
 # Automated Workflow for Geometry Generation, Mesh Generation, CFD Simulation, and ASO
