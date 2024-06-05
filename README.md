@@ -79,13 +79,15 @@ qsub submit_setupPythonEnv.pbs
 
 To leverage the AD capabilities in SU2 for shape optimization, it is necessary to compile SU2 with these features enabled. Unfortunately, the process of compiling SU2 on an HPC system can be complex and lacks comprehensive documentation. The following script provides a way to compile the source code on the Imperial HPC system with these features enabled.
 
-#### 3.2.1. Submit this scrtip to HPC system using the following command:
+#### 3.2.1. Modify the --prefix=/path/to/install/directory with the desired installation directory.
+
+#### 3.2.2. Submit this scrtip to HPC system using the following command:
 
 ```bash
 qsub submit_compileSU2.pbs
 ```	
 
-#### 3.2.2. Grant execution permissions to the SU2 executables:
+#### 3.2.3. Grant execution permissions to the SU2 executables:
 
 ```bash
 chmod +x SU2_CFD SU2_GEO SU2_DEF SU2_SOL SU2_CFD_AD SU2_DOT_AD
@@ -99,7 +101,7 @@ To set up this project, you need to update all the paths to the respective softw
 
 To run `update_paths.py`, the bash script `submit_updatePaths.pbs` is included in the main folder.
 
-**Modify the pbs Script**:
+1. Modify the pbs Script:
 Modify the following paths and Star+CCM+ key with you actual values.
 
 | Argument                | Description                                     |
@@ -116,26 +118,21 @@ Modify the following paths and Star+CCM+ key with you actual values.
 | `--output`              | Path to the output directory                    |
 | `--key`                 | Your actual Star-CCM+ license key               |
 
+2. Run the Script: Use the command line to run the script and provide the necessary arguments. 
 
-
-
-**Run the Script**: Use the command line to run the script and provide the necessary arguments. 
-
-#### Example Command:
 ```sh
 qsub submit_updatePaths.pbs
 ```
 
-
 ## 4. Preparing the Environment
 
-Ensure you have all the necessary input files:
+Ensure you have all the necessary template files:
 - `winggen.vspscript` for geometry generation.
 - `macro_with_prism.java` and `macro_without_prism.java` for mesh generation.
 - `Euler-cfd.py` and `RANS-cfd.py` for CFD simulation.
 - `Euler-shapeOptimisation.py` and `RANS-shapeOptimisation.py` for ASO.
 
-One example is provided in the template for FLEXOP aricraft wing geometry.
+One example is provided in the template directory for FLEXOP aricraft wing geometry. Modify as necessary for the desired wing geometry or flow conditions.
 
 ## 5. Running the Automation Script
 
@@ -163,40 +160,40 @@ python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 
 
 ## 6. Understanding the Workflow
 
-### 1. Submitting the Automated Process
+### 6.1. Submitting the Automated Process
 
 The `submit_automated_process.pbs` script submits `main_runAutomation.py` with the desired list of input cant and sweep angles.
 
-### 2. Setting Up Directories
+### 6.2. Setting Up Directories
 
-The `main_runAutomation.py` script creates directories for each winglet configuration and for each step (`GEOMETRY`, `MESH`, `CFD`, `ASO`).
+The `main_runAutomation.py` script creates directories for each winglet configuration and subdirectories for each step (`GEOMETRY`, `MESH`, `CFD`, `ASO`).
 
-### 3. Modifying the PBS Script
+### 6.3. Modifying the PBS Script
 
 The `main_runAutomation.py` script modifies the `submit_template.pbs` script to include the correct parameters and paths based on the user's input.
 
-### 4. Submitting the Job
+### 6.4. Submitting the Job
 
 The modified `submit_template.pbs` script is submitted to the job scheduler using `qsub`.
 
-### 5. Running Geometry Generation
+### 6.5. Running Geometry Generation
 
 If geometry generation is enabled (`-geo 1`), the `winggen.vspscript` file is used to generate the geometry.
 
-### 6. Running Mesh Generation
+### 6.6. Running Mesh Generation
 
 If mesh generation is enabled (`-mesh 1`):
 - The `mesh_generation.py` script is invoked.
 - The `-prism-layer` argument determines whether the mesh includes a prism layer.
 - For the RANS solver, the script iterates to adjust the prism layer based on y+ values.
 
-### 7. Running CFD Simulation
+### 6.7. Running CFD Simulation
 
 If CFD is enabled (`-cfd 1`):
 - The `run_CFD.py` script runs the CFD simulation.
 - For the RANS solver, the script checks y+ values and iterates mesh generation if necessary.
 
-### 8. Running ASO
+### 6.8. Running ASO
 
 If ASO is enabled (`-aso 1`), the `run_ASO.py` script runs the shape optimization based on CFD results.
 
@@ -204,7 +201,12 @@ If ASO is enabled (`-aso 1`), the `run_ASO.py` script runs the shape optimizatio
 
 ### Extracting Coefficients
 
-The software includes a script, `extract_coefficients.py`, which iterates through all winglet directories and extracts the CL and CD data.
+The software includes a script, `extract_coefficients.py`, which iterates through all winglet directories and extracts the CL and CD data. This is run using 
+
+```sh
+qsub submit_postProcessing.pbs
+```
+
 
 ## 8. Usage Notes
 
