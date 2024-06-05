@@ -12,22 +12,31 @@
 
 
 ## Table of Contents
-1. [Overview](#overview)
-2. [Prerequisites](#prerequisites)
-3. [Setting Up the Process](#setting-up-the-problem)
-   - [Updating Paths](#updating-paths)
-   - [Compiling SU2 with AD Capabilities](#compiling-su2-with-ad-capabilities)
-4. [Preparing the Environment](#step-1-preparing-the-environment)
-5. [Running the Automation Script](#step-2-running-the-automation-script)
+1. [Overview](#1-overview)
+2. [Prerequisites](#2-prerequisites)
+3. [Setting Up the Process](#3-setting-up-the-process)
+   - [Set up Python Environment (Anaconda) on the HPC Cluster](#31-set-up-python-environment-anaconda-on-the-hpc-cluster)
+   - [Compiling SU2 with AD Capabilities](#32-compiling-su2-with-ad-capabilities)
+   - [Updating Paths](#33-updating-paths)
+4. [Preparing the Environment](#4-preparing-the-environment)
+5. [Running the Automation Script](#5-running-the-automation-script)
    - [Command-Line Arguments](#command-line-arguments)
    - [Example Command](#example-command)
-6. [Understanding the Workflow](#step-3-understanding-the-workflow)
-7. [Post-Processing](#post-processing)
+6. [Understanding the Workflow](#6-understanding-the-workflow)
+   - [Submitting the Automated Process](#submitting-the-automated-process)
+   - [Setting Up Directories](#setting-up-directories)
+   - [Modifying the PBS Script](#modifying-the-pbs-script)
+   - [Submitting the Job](#submitting-the-job)
+   - [Running Geometry Generation](#running-geometry-generation)
+   - [Running Mesh Generation](#running-mesh-generation)
+   - [Running CFD Simulation](#running-cfd-simulation)
+   - [Running ASO](#running-aso)
+7. [Post-Processing](#7-post-processing)
    - [Extracting Coefficients](#extracting-coefficients)
-8. [Usage Notes](#usage-notes)
-9. [License](#license)
+8. [Usage Notes](#8-usage-notes)
+9. [License](#9-license)
 
-## Overview
+## 1. Overview
 
 This workflow automates the following steps:
 
@@ -40,7 +49,7 @@ This workflow automates the following steps:
   <img src="images/flowchart.png" alt="Winglet design process" width="800"/>
 </p>
 
-## Prerequisites
+## 2. Prerequisites
 
 Ensure all required modules are installed and available in your environment. This includes tools like:
 - [OpenMPI](https://www.open-mpi.org/)
@@ -49,9 +58,9 @@ Ensure all required modules are installed and available in your environment. Thi
 - [OpenVSP](http://openvsp.org/) (v3.37.0)
 - [Anaconda](https://www.anaconda.com/products/distribution)
 
-## Setting Up the Process
+## 3. Setting Up the Process
 
-### Set up Python environment (Anaconda) on the HPC Cluster
+### 3.1 Set up Python environment (Anaconda) on the HPC Cluster
 To run this project on the HPC you need to set up a Python environment with the following libraries:
 - numpy
 - argparse
@@ -69,7 +78,7 @@ qsub submit_setupPythonEnv.pbs
 chmod +x SU2_CFD SU2_GEO SU2_DEF SU2_SOL SU2_CFD_AD SU2_DOT_AD
 ```
 
-### Compiling SU2 with AD Capabilities
+### 3.2 Compiling SU2 with AD Capabilities
 
 To leverage the AD capabilities in SU2 for shape optimization, it is necessary to compile SU2 with these features enabled. Unfortunately, the process of compiling SU2 on an HPC system can be complex and lacks comprehensive documentation. The following script provides a way to compile the source code on the Imperial HPC system with these features enabled.
 
@@ -109,7 +118,7 @@ python3 ./meson.py build -Denable-autodiff=true -Denable-directdiff=true -Dwith-
 ./ninja -j8 -C build install
 ```	
 
-### Updating Paths
+### 3.3 Updating Paths
 
 To set up this project, you need to update all the paths to the respective software and main project folders. This is done using the `update_paths.py` script. The script updates the paths in specific Python files within your project directory to point to the correct locations of your main folder, OpenVSP, SU2 source files, SU2 compiled binaries, and the output folder. It also replaces a Star-CCM+ key license in `mesh_generation.py` if necessary.
 
@@ -140,7 +149,7 @@ qsub submit_updatePaths.pbs
 ```
 
 
-## Step 2: Preparing the Environment
+## 4. Preparing the Environment
 
 Ensure you have all the necessary input files:
 - `winggen.vspscript` for geometry generation.
@@ -150,7 +159,7 @@ Ensure you have all the necessary input files:
 
 One example is provided in the template for FLEXOP aricraft wing geometry.
 
-## Step 3: Running the Automation Script
+## 5. Running the Automation Script
 
 Use the `main_runAutomation.py` script to set up and submit the job. This script takes various arguments to control which steps to run and their configurations.
 
@@ -174,7 +183,7 @@ Use the `main_runAutomation.py` script to set up and submit the job. This script
 python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 0 -cfd 1 -cfd-solver euler -aso 1 -aso-solver euler
 ```
 
-## Step 4: Understanding the Workflow
+## 6. Understanding the Workflow
 
 ### 1. Submitting the Automated Process
 
@@ -213,20 +222,20 @@ If CFD is enabled (`-cfd 1`):
 
 If ASO is enabled (`-aso 1`), the `run_ASO.py` script runs the shape optimization based on CFD results.
 
-## Post-Processing
+## 7. Post-Processing
 
 ### Extracting Coefficients
 
 The software includes a script, `extract_coefficients.py`, which iterates through all winglet directories and extracts the CL and CD data.
 
-## Usage Notes
+## 8. Usage Notes
 
 - Use the `main_runAutomation.py` script to set up and submit the job.
 - Ensure the correct directories and input files are in place.
 - The `run_CFD.py` script includes an iterative process to adjust the mesh if the y+ values are too high, but this only applies to the RANS solver.
 - Each script has specific roles and works together to complete the full workflow.
 
-## License
+## 9. License
 
 This project is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License. You are free to:
 - **Share** — copy and redistribute the material in any medium or format
