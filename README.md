@@ -45,75 +45,35 @@ This workflow automates the following steps:
 Ensure all required modules are installed and available in your environment. This includes tools like:
 - [OpenMPI](https://www.open-mpi.org/)
 - [STAR-CCM+](https://mdx.plm.automation.siemens.com/star-ccm-plus) (v16.04.012-R8)
-- [SU2](https://su2code.github.io/) (v7.2.0 and v8.0.0)S
+- [SU2](https://su2code.github.io/) (v7.2.0 and v8.0.0)
 - [OpenVSP](http://openvsp.org/) (v3.37.0)
 - [Anaconda](https://www.anaconda.com/products/distribution)
 
 ## Setting Up the Process
 
-### Set up Python environment (Anaconda)
+### Set up Python environment (Anaconda) on the HPC Cluster
 To run this project on the HPC you need to set up a Python environment with the following libraries:
 - numpy
-– argparse
-– scipy
+- argparse
+- scipy
 - vtk
 
-## Step 1: Prepare the Environment Setup Script
+The project includes the file `submit_setupPythonEnv.pbs` which automatically sets up the required Python environment to run the project.
 
-A bash script (`setup_env.sh`) should be created to set up the Anaconda environment and install the required libraries. The script includes commands to create the environment and install the necessary packages: `numpy`, `scipy`, `vtk`, and `argparse`. The libraries `os`, `sys`, `subprocess`, and `math` are part of the Python standard library and do not require separate installation.
+### Command:
+```bash
+    qsub submit_setupPythonEnv.pbs
+```
 
-## Step 2: Submit the Environment Setup Script
-
-Use the `submit_setupPythonEnv.py` script to submit the environment setup script to the job scheduler. Ensure the `submit_setupPythonEnv.py` script is properly configured with the job scheduler commands and paths.
-
-## Usage
-
-To submit the environment setup script, follow these steps:
-
-1. **Make sure the environment setup script is executable:**
-
-    ```bash
-    chmod +x setup_env.sh
-    ```
-
-2. **Submit the script using the `submit_setupPythonEnv.py`:**
-
-    ```bash
-    python submit_setupPythonEnv.py
-    ```
-
-The `submit_setupPythonEnv.py` script will handle the submission process according to the configured job scheduler settings. Once the job is completed, the specified Anaconda environment will be ready with all the required libraries installed.
-
-## Additional Notes
-
-- Ensure that you have the necessary permissions to submit jobs on the HPC system.
-- Verify that the `submit_setupPythonEnv.py` script is correctly pointing to the `setup_env.sh` script and configured according to your system's job scheduler requirements.
-- Monitor the job submission system for any issues or logs related to the job to ensure the environment is set up correctly.
-
-This process simplifies the setup of a consistent Python environment across different systems, ensuring all necessary libraries are installed and available for your project.
-
-
-### Updating Paths
-
-To set up this project, you need to update all the paths to the respective software and folders. This is done using the `update_paths.py` script. The script updates the paths in specific Python files within your project directory to point to the correct locations of your main folder, OpenVSP, SU2 source files, SU2 compiled binaries, and the output folder. It also replaces a placeholder key in `mesh_generation.py` if necessary.
-
-#### How to Use the `update_paths.py` Script
-
-1. **Save the Script**: Save the `update_paths.py` script in your project directory.
-2. **Make the Script Executable**: If you're on a Unix-like system, make the script executable by running:
-    ```sh
-    chmod +x update_paths.py
-    ```
-3. **Run the Script**: Use the command line to run the script and provide the necessary arguments. Here’s an example:
-    ```sh
-    python3 update_paths.py /path/to/your/project --main /new/path/to/main --openvsp /new/path/to/OpenVSP_v3.37.0_Compiled --su2_v72_src /new/path/to/SU2_v7.2.0_Source --su2_v72_bin /new/path/to/SU2_v7.2.0_Binaries --su2_v80_src /new/path/to/SU2_v8.0.0_Source --su2_v80_bin /new/path/to/SU2_v8.0.0_Binaries --output /new/path/to/main/output --key your_actual_key
-    ```
+```bash
+chmod +x SU2_CFD SU2_GEO SU2_DEF SU2_SOL SU2_CFD_AD SU2_DOT_AD
+```
 
 ### Compiling SU2 with AD Capabilities
 
 To leverage the AD capabilities in SU2 for shape optimization, it is necessary to compile SU2 with these features enabled. Unfortunately, the process of compiling SU2 on an HPC system can be complex and lacks comprehensive documentation. The following script provides a way to compile the source code on the Imperial HPC system with these features enabled.
 
-#### Script to Compile SU2 with AD
+##### Script to Compile SU2 with AD
 
 Save the following script and submit it to your HPC system:
 
@@ -148,6 +108,31 @@ python3 ./meson.py build -Denable-autodiff=true -Denable-directdiff=true -Dwith-
 # j defines the number of cores to use (all available cores are used by default)
 ./ninja -j8 -C build install
 ```	
+
+### Updating Paths
+
+To set up this project, you need to update all the paths to the respective software and main project folders. This is done using the `update_paths.py` script. The script updates the paths in specific Python files within your project directory to point to the correct locations of your main folder, OpenVSP, SU2 source files, SU2 compiled binaries, and the output folder. It also replaces a Star-CCM+ key license in `mesh_generation.py` if necessary.
+
+#### How to Use the `update_paths.py` Script
+
+To run `update_paths.py`, the bash script `submit_updatePaths.pbs` is included in the main folder.
+
+**Modify the pbs Script**:
+Modify the following paths and Star+CCM+ key with you actual values.
+    ```python3 ./update_paths.py /path/to/your/project \
+    --main /new/path/to/main \
+    --openvsp /new/path/to/OpenVSP_v3.37.0_Compiled \
+    --su2_v72_src /new/path/to/SU2_v7.2.0_Source \
+    --su2_v72_bin /new/path/to/SU2_v7.2.0_Binaries \
+    --su2_v80_src /new/path/to/SU2_v8.0.0_Source \
+    --su2_v80_bin /new/path/to/SU2_v8.0.0_Binaries \
+    --output /new/path/to/main/output \
+    --key your_actual_key
+    ```
+
+**Run the Script**: Use the command line to run the script and provide the necessary arguments. Here’s an example:
+    ```qsub submit_updatePaths.pbs```
+
 
 ## Step 2: Preparing the Environment
 
