@@ -62,7 +62,7 @@ def main(np, mem, time, steps, list_cant, list_sweep):
         raise ValueError("Euler solver requires the mesh to be generated without a prism layer. Please set -prism-layer to 0.")
 
     main_folder = "/path/to/main"
-    template_folder = "bin/submit_template.pbs"
+    template_folder = "template/submit_template.pbs"
 
     for cant in list_cant:
         for sweep in list_sweep:

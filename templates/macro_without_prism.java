@@ -10,7 +10,7 @@ import star.cadmodeler.*;
 import star.meshing.*;
 import star.delaunaymesher.*;
 
-public class macro extends StarMacro {
+public class macro_without_prism extends StarMacro {
 
   public void execute() {
     execute0();
@@ -26,7 +26,7 @@ public class macro extends StarMacro {
 
     cadModel_1.resetSystemOptions();
 
-    simulation_0.get(SolidModelManager.class).importFilesInto3DCad(new StringVector(new String[] {resolvePath("/rds/general/user/jg2219/ephemeral/Final-try/bin/domain.STEP")}), cadModel_1, true, false, false, false, false, false, false, true, false, true, NeoProperty.fromString("{\'STEP\': 0, \'NX\': 0, \'CATIAV5\': 0, \'SE\': 0, \'JT\': 0}"));
+    simulation_0.get(SolidModelManager.class).importFilesInto3DCad(new StringVector(new String[] {resolvePath("./domain.STEP")}), cadModel_1, true, false, false, false, false, false, false, true, false, true, NeoProperty.fromString("{\'STEP\': 0, \'NX\': 0, \'CATIAV5\': 0, \'SE\': 0, \'JT\': 0}"));
 
     UniteBodiesFeature uniteBodiesFeature_1 = 
       cadModel_1.getFeatureManager().createUniteBodies();

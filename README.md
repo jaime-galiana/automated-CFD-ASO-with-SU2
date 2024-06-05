@@ -145,47 +145,52 @@ python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 
 
 ## Step 4: Understanding the Workflow
 
-1. Setting Up Directories
+### 1. Submitting the Automated Process
 
-- The `submit_automated_process.pbs` script submits `main_runAutomation.py` to the desired list
-- The `main_runAutomation.py` script creates directories for each winglet configuration and for each step (`GEOMETRY`, `MESH`, `CFD`, `ASO`).
+The `submit_automated_process.pbs` script submits `main_runAutomation.py` with the desired list of input cant and sweep angles.
 
-2. Modifying the PBS Script
+### 2. Setting Up Directories
 
-- The `main_runAutomation.py` script modifies the `submit_template.pbs` script to include the correct parameters and paths based on the user's input.
+The `main_runAutomation.py` script creates directories for each winglet configuration and for each step (`GEOMETRY`, `MESH`, `CFD`, `ASO`).
 
-3. Submitting the Job
+### 3. Modifying the PBS Script
 
-- The modified `submit_template.pbs` script is submitted to the job scheduler (qsub).
+The `main_runAutomation.py` script modifies the `submit_template.pbs` script to include the correct parameters and paths based on the user's input.
 
-4. Running Geometry Generation
+### 4. Submitting the Job
 
-- If geometry generation is enabled (-geo 1), the winggen.vspscript file is used to generate the geometry.
+The modified `submit_template.pbs` script is submitted to the job scheduler using `qsub`.
 
-5. Running Mesh Generation
+### 5. Running Geometry Generation
 
-- If mesh generation is enabled (-mesh 1), the mesh_generation.py script is invoked.
-- The prism_layer argument determines whether the mesh includes a prism layer.
+If geometry generation is enabled (`-geo 1`), the `winggen.vspscript` file is used to generate the geometry.
+
+### 6. Running Mesh Generation
+
+If mesh generation is enabled (`-mesh 1`):
+- The `mesh_generation.py` script is invoked.
+- The `-prism-layer` argument determines whether the mesh includes a prism layer.
 - For the RANS solver, the script iterates to adjust the prism layer based on y+ values.
 
-6. Running CFD Simulation
+### 7. Running CFD Simulation
 
-- If CFD is enabled (`-cfd 1`), the run_CFD.py script runs the CFD simulation.
+If CFD is enabled (`-cfd 1`):
+- The `run_CFD.py` script runs the CFD simulation.
 - For the RANS solver, the script checks y+ values and iterates mesh generation if necessary.
 
-7. Running ASO
+### 8. Running ASO
 
-- If ASO is enabled (`-aso 1`), the `run_ASO.py` script runs the shape optimization based on CFD results.
+If ASO is enabled (`-aso 1`), the `run_ASO.py` script runs the shape optimization based on CFD results.
 
 ## Post-Processing
+
 ### Extracting Coefficients
 
-The software includes a script, extract_coefficients.py, which iterates through all winglet directories and extracts the CL and CD data.
-
+The software includes a script, `extract_coefficients.py`, which iterates through all winglet directories and extracts the CL and CD data.
 
 ## Usage Notes
 
-- Use the `main_runAutomation.py´ script to set up and submit the job.
+- Use the `main_runAutomation.py` script to set up and submit the job.
 - Ensure the correct directories and input files are in place.
 - The `run_CFD.py` script includes an iterative process to adjust the mesh if the y+ values are too high, but this only applies to the RANS solver.
 - Each script has specific roles and works together to complete the full workflow.
