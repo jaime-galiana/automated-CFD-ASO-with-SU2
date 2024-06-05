@@ -78,6 +78,7 @@ To leverage the AD capabilities in SU2 for shape optimization, it is necessary t
 Save the following script and submit it to your HPC system:
 
 ```bash
+#!/bin/bash
 #PBS -l walltime=8:00:00
 #PBS -l select=1:ncpus=8:mem=200gb
 
@@ -116,6 +117,8 @@ Ensure you have all the necessary input files:
 - `Euler-cfd.py` and `RANS-cfd.py` for CFD simulation.
 - `Euler-shapeOptimisation.py` and `RANS-shapeOptimisation.py` for ASO.
 
+One example is provided in the template for FLEXOP aricraft wing geometry.
+
 ## Step 3: Running the Automation Script
 
 Use the `main_runAutomation.py` script to set up and submit the job. This script takes various arguments to control which steps to run and their configurations.
@@ -144,6 +147,7 @@ python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 
 
 1. Setting Up Directories
 
+- The `submit_automated_process.pbs` script submits `main_runAutomation.py` to the desired list
 - The `main_runAutomation.py` script creates directories for each winglet configuration and for each step (`GEOMETRY`, `MESH`, `CFD`, `ASO`).
 
 2. Modifying the PBS Script

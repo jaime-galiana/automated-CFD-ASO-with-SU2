@@ -9,4 +9,8 @@ cd $PBS_O_WORKDIR
 source activate
 conda activate envFYP
 
-python3 run_automated_process.py -np 32 -mem 200 -time 8 -solver Euler -ASO no -FFDx0 0 -FFDxf 0 -FFDy0 0 -FFDyf 0 -FFDz0 0 -FFDzf 0 -Pointsx 0 -Pointsy 0 -Pointsz 0
+# Specify the list of cant and sweep angles
+CANT_LIST="-120 -105 -90 -75 -60 -45 -30 -15 0 15 30 45 60 75 90 105 120"
+SWEEP_LIST="-20 -10 0 10 20"
+
+python3 main_runAutomation.py -np 8 -mem 32 -time 8 -geo 1 -mesh 1 -prism-layer 0 -cfd 1 -cfd-solver euler -aso 1 -aso-solver euler -cant-list $CANT_LIST -sweep-list $SWEEP_LIST

@@ -55,14 +55,11 @@ def modify_script(filename, np, mem, time, cant, sweep, steps, workdir):
     except Exception as e:
         print(f"Error modifying script: {filename} - {e}")
 
-def main(np, mem, time, steps):
+def main(np, mem, time, steps, list_cant, list_sweep):
     if steps['cfd_solver'] == 'RANS' and steps['prism_layer'] != 1:
         raise ValueError("RANS solver requires the mesh to be generated with a prism layer. Please set -prism-layer to 1.")
     if steps['cfd_solver'] == 'Euler' and steps['prism_layer'] != 0:
         raise ValueError("Euler solver requires the mesh to be generated without a prism layer. Please set -prism-layer to 0.")
-
-    list_cant = [-120, -105, -90, -75, -60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90, 105, 120]
-    list_sweep = [-20, -10, 0, 10, 20]
 
     main_folder = "/path/to/main"
     template_folder = "bin/submit_template.pbs"
@@ -117,6 +114,8 @@ if __name__ == "__main__":
     parser.add_argument('-cfd-solver', type=str, help='CFD Solver to use (Euler or RANS)')
     parser.add_argument('-aso', type=int, choices=[0, 1], help='Run ASO (0: No, 1: Yes)')
     parser.add_argument('-aso-solver', type=str, help='ASO Solver to use (Euler or RANS)')
+    parser.add_argument('-cant-list', nargs='+', type=int, help='List of cant angles to test')
+    parser.add_argument('-sweep-list', nargs='+', type=int, help='List of sweep angles to test')
 
     args = parser.parse_args()
 
@@ -139,4 +138,4 @@ if __name__ == "__main__":
         'aso_solver': args.aso_solver
     }
 
-    main(args.np, args.mem, args.time, steps)
+    main(args.np, args.mem, args.time, steps, args.cant_list, args.sweep_list)
