@@ -174,7 +174,7 @@ The `main_runAutomation.py` script modifies the `submit_template.pbs` script to 
 
 ### 6.4. Submitting the Job
 
-The modified `submit_template.pbs` script is submitted to the job scheduler using `qsub`.
+The modified `submit_template.pbs` script is submitted to the job scheduler using `qsub` from each directory created for each of the winglet configurations.
 
 ### 6.5. Running Geometry Generation
 
@@ -206,7 +206,6 @@ The software includes a script, `extract_coefficients.py`, which iterates throug
 ```sh
 qsub submit_postProcessing.pbs
 ```
-
 
 ## 8. Usage Notes
 
