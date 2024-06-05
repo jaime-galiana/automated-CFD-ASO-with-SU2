@@ -120,7 +120,7 @@ To run `update_paths.py`, the bash script `submit_updatePaths.pbs` is included i
 **Modify the pbs Script**:
 Modify the following paths and Star+CCM+ key with you actual values.
 
-```
+```sh
 python3 ./update_paths.py /path/to/your/project \
     --main /new/path/to/main \
     --openvsp /new/path/to/OpenVSP_v3.37.0_Compiled \
@@ -132,8 +132,11 @@ python3 ./update_paths.py /path/to/your/project \
     --key your_actual_key
 ```
 
-**Run the Script**: Use the command line to run the script and provide the necessary arguments. Here’s an example:
-    ```qsub submit_updatePaths.pbs```
+**Run the Script**: Use the command line to run the script and provide the necessary arguments. Example Command:
+
+```sh
+qsub submit_updatePaths.pbs
+```
 
 
 ## Step 2: Preparing the Environment
