@@ -8,10 +8,11 @@
 
 import os
 import re
+import sys
 
 def extract_last_cl_cd(file_path):
     """
-    Extracts the last Cl and Cd values from a output SU2 file.
+    Extracts the last Cl and Cd values from an output SU2 file.
 
     Parameters:
         file_path (str): Path to the file.
@@ -39,9 +40,13 @@ def main():
     """
     Main function to traverse directories, extract Cl and Cd values, and save the results.
     """
-    base_dir = '/path/to/main/output'
-    list_cant = [-120, -105, -90, -75, -60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90, 105, 120]
-    list_sweep = [-20, -10, 0, 10, 20]
+    if len(sys.argv) < 4:
+        print("Usage: python extractCoefficients.py <base_dir> <cant_angles> <sweep_angles>")
+        sys.exit(1)
+
+    base_dir = sys.argv[1]
+    list_cant = [int(angle) for angle in sys.argv[2].split(',')]
+    list_sweep = [int(angle) for angle in sys.argv[3].split(',')]
 
     results = []
 

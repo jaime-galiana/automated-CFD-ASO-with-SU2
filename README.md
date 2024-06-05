@@ -67,60 +67,33 @@ To run this project on the HPC you need to set up a Python environment with the 
 - scipy
 - vtk
 
-The project includes the file `submit_setupPythonEnv.pbs` which automatically sets up the required Python environment to run the project.
+The project includes a script named `submit_setupPythonEnv.pbs` that automates the setup of the required Python environment.
 
-#### Command:
+#### Submit the PBS script to the HPC job scheduler to create the environment:
+
 ```bash
 qsub submit_setupPythonEnv.pbs
-```
-
-```bash
-chmod +x SU2_CFD SU2_GEO SU2_DEF SU2_SOL SU2_CFD_AD SU2_DOT_AD
 ```
 
 ### 3.2 Compiling SU2 with AD Capabilities
 
 To leverage the AD capabilities in SU2 for shape optimization, it is necessary to compile SU2 with these features enabled. Unfortunately, the process of compiling SU2 on an HPC system can be complex and lacks comprehensive documentation. The following script provides a way to compile the source code on the Imperial HPC system with these features enabled.
 
-##### Script to Compile SU2 with AD
-
-Save the following script and submit it to your HPC system:
+#### 3.2.1. Submit this scrtip to HPC system using the following command:
 
 ```bash
-#!/bin/bash
-#PBS -l walltime=8:00:00
-#PBS -l select=1:ncpus=8:mem=200gb
-
-module load tools/prod
-module load Python/3.10.8-GCCcore-12.2.0
-module load OpenMPI/4.1.4-GCC-12.2.0
-module load CMake/3.24.3-GCCcore-12.2.0
-
-# Environmental variables, not entirely sure if they are needed
-export MPICC=$(which mpicc)
-export MPICXX=$(which mpicxx)
-export CC=mpicc
-export CXX=mpicxx
-
-# Path to folder where you want to place your source code
-cd /rds/general/user/username/home/
-
-# Clone last version of source code in the directory
-git clone https://github.com/su2code/SU2.git
-
-# Access the folder containing the source code
-cd SU2
-
-# --prefix= specify the path where you want the compiled code to be 
-python3 ./meson.py build -Denable-autodiff=true -Denable-directdiff=true -Dwith-mpi=enabled --prefix=/path/to/install/directory
-
-# j defines the number of cores to use (all available cores are used by default)
-./ninja -j8 -C build install
+qsub submit_compileSU2.pbs
 ```	
+
+#### 3.2.2. Grant execution permissions to the SU2 executables:
+
+```bash
+chmod +x SU2_CFD SU2_GEO SU2_DEF SU2_SOL SU2_CFD_AD SU2_DOT_AD
+```
 
 ### 3.3 Updating Paths
 
-To set up this project, you need to update all the paths to the respective software and main project folders. This is done using the `update_paths.py` script. The script updates the paths in specific Python files within your project directory to point to the correct locations of your main folder, OpenVSP, SU2 source files, SU2 compiled binaries, and the output folder. It also replaces a Star-CCM+ key license in `mesh_generation.py` if necessary.
+To set up this project, you need to update all the paths to the respective software and main project folders. This is done using the `update_paths.py` script, which updates the paths in specific Python files within your project directory to point to the correct locations of your main folder, OpenVSP, SU2 source files, SU2 compiled binaries, and the output folder. It also replaces the Star-CCM+ license key in `mesh_generation.py` if necessary.
 
 #### How to Use the `update_paths.py` Script
 
@@ -129,17 +102,22 @@ To run `update_paths.py`, the bash script `submit_updatePaths.pbs` is included i
 **Modify the pbs Script**:
 Modify the following paths and Star+CCM+ key with you actual values.
 
-```sh
-python3 ./update_paths.py /path/to/your/project \
-    --main /new/path/to/main \
-    --openvsp /new/path/to/OpenVSP_v3.37.0_Compiled \
-    --su2_v72_src /new/path/to/SU2_v7.2.0_Source \
-    --su2_v72_bin /new/path/to/SU2_v7.2.0_Binaries \
-    --su2_v80_src /new/path/to/SU2_v8.0.0_Source \
-    --su2_v80_bin /new/path/to/SU2_v8.0.0_Binaries \
-    --output /new/path/to/main/output \
-    --key your_actual_key
-```
+| Argument                | Description                                     |
+|-------------------------|-------------------------------------------------|
+| `python3`               | Command to run the Python interpreter           |
+| `./update_paths.py`     | Path to the script that updates the paths       |
+| `/path/to/your/project` | Path to your project directory                  |
+| `--main`                | Path to the main project folder                 |
+| `--openvsp`             | Path to the compiled OpenVSP v3.37.0 directory  |
+| `--su2_v72_src`         | Path to the SU2 v7.2.0 source directory         |
+| `--su2_v72_bin`         | Path to the SU2 v7.2.0 binaries directory       |
+| `--su2_v80_src`         | Path to the SU2 v8.0.0 source directory         |
+| `--su2_v80_bin`         | Path to the SU2 v8.0.0 binaries directory       |
+| `--output`              | Path to the output directory                    |
+| `--key`                 | Your actual Star-CCM+ license key               |
+
+
+
 
 **Run the Script**: Use the command line to run the script and provide the necessary arguments. 
 

@@ -10,15 +10,22 @@
 #              extractCoefficients.py script to extract aerodynamic coefficients from the simulation results.
 #
 # Inputs required:
-# - None.
+# - base_dir: Path to the base directory containing the simulation results.
+# - cant_angles: List of cant angles to process, separated by commas.
+# - sweep_angles: List of sweep angles to process, separated by commas.
 
 module load anaconda3/personal
 
 cd $PBS_O_WORKDIR
 
+# Define the base directory and angles
+base_dir="/path/to/main/output"
+cant_angles="-120,-105,-90,-75,-60,-45,-30,-15,0,15,30,45,60,75,90,105,120"
+sweep_angles="-20,-10,0,10,20"
+
 # Activate the Anaconda environment
 source activate
 conda activate envFYP
 
-# Run the extractCoefficients.py script
-python3 ./bin/extractCoefficients.py
+# Run the extractCoefficients.py script with the specified parameters
+python3 ./bin/extractCoefficients.py $base_dir $cant_angles $sweep_angles
