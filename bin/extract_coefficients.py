@@ -52,7 +52,7 @@ def main():
 
     for cant in list_cant:
         for sweep in list_sweep:
-            winglet_dir = f'winglet_c{cant}_s{sweep}'
+            winglet_dir = f'winglet_c{cant}_s{sweep}/CFD'
             full_dir_path = os.path.join(base_dir, winglet_dir)
 
             if os.path.exists(full_dir_path):
