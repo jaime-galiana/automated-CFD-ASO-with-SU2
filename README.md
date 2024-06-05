@@ -49,8 +49,6 @@ Ensure all required modules are installed and available in your environment. Thi
 - [SU2](https://su2code.github.io/) (v7.2.0 and v8.0.0)S
 - [OpenVSP](http://openvsp.org/) (v3.37.0)
 
-
-
 ## Setting Up the Process
 
 ### Updating Paths
