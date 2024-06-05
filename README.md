@@ -60,7 +60,7 @@ To run this project on the HPC you need to set up a Python environment with the 
 
 The project includes the file `submit_setupPythonEnv.pbs` which automatically sets up the required Python environment to run the project.
 
-### Command:
+#### Command:
 ```bash
 qsub submit_setupPythonEnv.pbs
 ```
