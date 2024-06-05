@@ -132,8 +132,9 @@ python3 ./update_paths.py /path/to/your/project \
     --key your_actual_key
 ```
 
-**Run the Script**: Use the command line to run the script and provide the necessary arguments. Example Command:
+**Run the Script**: Use the command line to run the script and provide the necessary arguments. 
 
+#### Example Command:
 ```sh
 qsub submit_updatePaths.pbs
 ```
