@@ -110,13 +110,13 @@ def main():
     ]
     
     default_paths = [
-        'path/to/main',
-        'path/to/OpenVSP_v3.37.0_Compiled',
-        'path/to/SU2_v7.2.0_Source',
-        'path/to/SU2_v7.2.0_Binaries',
-        'path/to/SU2_v8.0.0_Source',
-        'path/to/SU2_v8.0.0_Binaries',
-        'path/to/main/output'
+        '/path/to/main',
+        '/path/to/OpenVSP_v3.37.0_Compiled',
+        '/path/to/SU2_v7.2.0_Source',
+        '/path/to/SU2_v7.2.0_Binaries',
+        '/path/to/SU2_v8.0.0_Source',
+        '/path/to/SU2_v8.0.0_Binaries',
+        '/path/to/main/output'
     ]
     
     new_paths = [

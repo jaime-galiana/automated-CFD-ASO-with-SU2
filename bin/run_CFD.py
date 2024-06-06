@@ -68,8 +68,8 @@ def run_cfd(solver, directory):
     """
     try:
         # Set environment variables for SU2
-        os.environ['SU2_RUN'] = '/path/to/SU2/Compiled-v7.2.0/bin'
-        os.environ['SU2_HOME'] = '/path/to/SU2/Source-v7.2.0'
+        os.environ['SU2_RUN'] = '/path/to/SU2_v7.2.0_Binaries'
+        os.environ['SU2_HOME'] = '/path/to/SU2_v7.2.0_Source'
         os.environ['PATH'] += ':' + os.environ['SU2_RUN']
         os.environ['PYTHONPATH'] = os.environ.get('PYTHONPATH', '') + ':' + os.environ['SU2_RUN']
 
@@ -95,7 +95,7 @@ def run_cfd(solver, directory):
         cfg_file = os.path.join(directory, 'CFD', solver, f'{solver.lower()}-cfd.py')
 
         # Run SU2_CFD with the chosen configuration file
-        cmd_str = f"mpiexec /path/to/SU2/Compiled-v7.2.0/bin/SU2_CFD {cfg_file}"
+        cmd_str = f"mpiexec /path/to/SU2_v7.2.0_Binaries/SU2_CFD {cfg_file}"
         subprocess.run(cmd_str, cwd=work_dir, shell=True)
 
         # Wait until the flow file is generated
@@ -126,7 +126,7 @@ def run_cfd(solver, directory):
                     subprocess.run(cmd_str, shell=True)
 
                     # Rerun the CFD simulation
-                    cmd_str = f"mpiexec /path/to/SU2/Compiled-v7.2.0/bin/SU2_CFD {cfg_file}"
+                    cmd_str = f"mpiexec /path/to/SU2_v7.2.0_Binaries/SU2_CFD {cfg_file}"
                     subprocess.run(cmd_str, cwd=work_dir, shell=True)
 
                     # Wait until the flow file is generated

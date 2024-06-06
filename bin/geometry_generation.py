@@ -133,7 +133,7 @@ def main(cant, sweep, output_dir):
         write_file.write(replaced_content)
 
     # Run OpenVSP script
-    cmd_str = f"/path/to/OpenVSP-3.37.0-Linux/vspscript -script {script_path}"
+    cmd_str = f"/path/to/OpenVSP_v3.37.0_Compiled/vspscript -script {script_path}"
     subprocess.run(cmd_str, shell=True)
 
 if __name__ == "__main__":

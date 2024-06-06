@@ -21,8 +21,8 @@ def main():
 
     try:
         # Set environment variables for SU2
-        os.environ['SU2_RUN'] = '/path/to/SU2/Compiled-v8.0.0/bin'
-        os.environ['SU2_HOME'] = '/path/to/SU2/Source-v8.0.0'
+        os.environ['SU2_RUN'] = '/path/to/SU2_v7.2.0_Binaries'
+        os.environ['SU2_HOME'] = '/path/to/SU2_v8.0.0_Source'
         os.environ['PATH'] += ':' + os.environ['SU2_RUN']
         os.environ['PYTHONPATH'] = os.environ.get('PYTHONPATH', '') + ':' + os.environ['SU2_RUN']
 
@@ -43,7 +43,7 @@ def main():
         cfg_file = os.path.join(args.directory, 'ASO', args.solver, f'{args.solver.lower()}-shapeOptimisation.py')
         if os.path.exists(cfg_file):
             # Run SU2_DEF to preprocess the configuration
-            cmd_str = f"mpiexec /path/to/SU2/Compiled-v8.0.0/bin/SU2_DEF {cfg_file}"
+            cmd_str = f"mpiexec /path/to/SU2_v7.2.0_Binaries/SU2_DEF {cfg_file}"
             subprocess.run(cmd_str, cwd=work_dir, shell=True)
 
             # Remove existing mesh file
@@ -54,11 +54,11 @@ def main():
             os.rename(os.path.join(work_dir, 'mesh_out.su2'), os.path.join(work_dir, 'mesh.su2'))
 
             # Run SU2_GEO to evaluate geometry
-            cmd_str = f"mpiexec /path/to/SU2/Compiled-v8.0.0/bin/SU2_GEO {cfg_file}"
+            cmd_str = f"mpiexec /path/to/SU2_v7.2.0_Binaries/SU2_GEO {cfg_file}"
             subprocess.run(cmd_str, cwd=work_dir, shell=True)
 
             # Run the shape optimization
-            cmd_str = f"python3 /path/to/SU2/Compiled-v8.0.0/bin/shape_optimization.py -n 48 -g DISCRETE_ADJOINT -f {cfg_file}"
+            cmd_str = f"python3 /path/to/SU2_v7.2.0_Binaries/shape_optimization.py -n 48 -g DISCRETE_ADJOINT -f {cfg_file}"
             subprocess.run(cmd_str, cwd=work_dir, shell=True)
         else:
             print(f"Input configuration file '{cfg_file}' not found. Please provide the configuration file.")
