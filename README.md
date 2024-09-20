@@ -95,34 +95,7 @@ chmod +x SU2_CFD SU2_GEO SU2_DEF SU2_SOL SU2_CFD_AD SU2_DOT_AD
 
 ### 3.3 Updating Paths
 
-To set up this project, you need to update all the paths to the respective software and main project folders. This is done using the `update_paths.py` script, which updates the paths in specific Python files within your project directory to point to the correct locations of your main folder, OpenVSP, SU2 source files, SU2 compiled binaries, and the output folder. It also replaces the Star-CCM+ license key in `mesh_generation.py` if necessary.
-
-#### How to Use the `update_paths.py` Script
-
-To run `update_paths.py`, the bash script `submit_updatePaths.pbs` is included in the main folder.
-
-1. Modify the pbs Script:
-Modify the following paths and Star+CCM+ key with you actual values.
-
-| Argument                | Description                                     |
-|-------------------------|-------------------------------------------------|
-| `python3`               | Command to run the Python interpreter           |
-| `./update_paths.py`     | Path to the script that updates the paths       |
-| `/path/to/your/project` | Path to your project directory                  |
-| `--main`                | Path to the main project folder                 |
-| `--openvsp`             | Path to the compiled OpenVSP v3.37.0 directory  |
-| `--su2_v72_src`         | Path to the SU2 v7.2.0 source directory         |
-| `--su2_v72_bin`         | Path to the SU2 v7.2.0 binaries directory       |
-| `--su2_v80_src`         | Path to the SU2 v8.0.0 source directory         |
-| `--su2_v80_bin`         | Path to the SU2 v8.0.0 binaries directory       |
-| `--output`              | Path to the output directory                    |
-| `--key`                 | Your actual Star-CCM+ license key               |
-
-2. Run the Script: Use the command line to run the script and provide the necessary arguments. 
-
-```sh
-qsub submit_updatePaths.pbs
-```
+To set up this project, you need to update all the paths to the respective software and main project folders.
 
 ## 4. Preparing the Environment
 
