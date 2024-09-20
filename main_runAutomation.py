@@ -79,12 +79,18 @@ def main(np, mem, time, steps, list_cant, list_sweep):
                 subprocess.run(['cp', os.path.join(main_folder, "templates/winggen.vspscript"), os.path.join(output_folder, "GEOMETRY", "winggen.vspscript")])
             if steps['mesh'] == 1:
                 create_directory(os.path.join(output_folder, "MESH"))
+                mesh_subdir = "with_prism" if steps['prism_layer'] == 1 else "without_prism"
+                create_directory(os.path.join(output_folder, "MESH", mesh_subdir))
                 macro_file = "macro_with_prism.java" if steps['prism_layer'] == 1 else "macro_without_prism.java"
-                subprocess.run(['cp', os.path.join(main_folder, "templates", macro_file), os.path.join(output_folder, "MESH", "macro.java")])
+                subprocess.run(['cp', os.path.join(main_folder, "templates", macro_file), os.path.join(output_folder, "MESH", mesh_subdir, macro_file)])
+                subprocess.run(['cp', os.path.join(main_folder, "templates", "domain.STEP"), os.path.join(output_folder, "MESH", mesh_subdir, "domain.STEP")])
+                subprocess.run(['cp', os.path.join(main_folder, output_folder, "GEOMETRY", "wing.stp"), os.path.join(main_folder, output_folder, "MESH", mesh_subdir, "wing.stp")])
             if steps['cfd'] == 1:
                 cfd_solver_dir = os.path.join(output_folder, "CFD", steps['cfd_solver'])
+                mesh_file = "with_prism/mesh.cga" if steps['cfd_solver'] == "RANS" else "without_prism/mesh.cga"
                 create_directory(cfd_solver_dir)
                 subprocess.run(['cp', os.path.join(main_folder, f"templates/{steps['cfd_solver']}-cfd.cfg"), os.path.join(cfd_solver_dir, f"{steps['cfd_solver']}-cfd.cfg")])
+                subprocess.run(['cp', os.path.join(main_folder, output_folder, "MESH", mesh_file), os.path.join(main_folder, cfd_solver_dir, "mesh.cga")])
             if steps['aso'] == 1:
                 aso_solver_dir = os.path.join(output_folder, "ASO", steps['aso_solver'])
                 create_directory(aso_solver_dir)
@@ -98,6 +104,17 @@ def main(np, mem, time, steps, list_cant, list_sweep):
             modify_script("submit.pbs", np, mem, time, cant, sweep, steps, output_folder)
 
             try:
+                # Dynamically create the submit.pbs file with the correct parameters
+                with open("submit.pbs", "a") as file:
+                    file.write(f"\nGEO={steps['geo']}\n")
+                    file.write(f"MESH={steps['mesh']}\n")
+                    file.write(f"PRISM_LAYER={steps['prism_layer']}\n")
+                    file.write(f"CFD={steps['cfd']}\n")
+                    file.write(f"CFD_SOLVER={steps['cfd_solver']}\n")
+                    file.write(f"ASO={steps['aso']}\n")
+                    file.write(f"ASO_SOLVER={steps['aso_solver']}\n")
+                    file.write(f"WORKDIR={output_folder}\n")
+                    file.write(f"NP={np}\n")  # Add np parameter for parallel processes
                 subprocess.run(["qsub", "submit.pbs"], check=True)
             except subprocess.CalledProcessError as e:
                 print(f"Error executing qsub: {e}")
