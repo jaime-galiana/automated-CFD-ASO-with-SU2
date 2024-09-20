@@ -62,7 +62,7 @@ def main(np, mem, time, steps, list_cant, list_sweep):
         raise ValueError("Euler solver requires the mesh to be generated without a prism layer. Please set -prism-layer to 0.")
 
     main_folder = "/path/to/main"
-    template_folder = "template/submit_template.pbs"
+    template_folder = "templates/submit_template.pbs"
 
     for cant in list_cant:
         for sweep in list_sweep:
@@ -76,19 +76,19 @@ def main(np, mem, time, steps, list_cant, list_sweep):
             # Create subdirectories for each step and solver only when needed
             if steps['geo'] == 1:
                 create_directory(os.path.join(output_folder, "GEOMETRY"))
-                subprocess.run(['cp', os.path.join(main_folder, "template/winggen.vspscript"), os.path.join(output_folder, "GEOMETRY", "winggen.vspscript")])
+                subprocess.run(['cp', os.path.join(main_folder, "templates/winggen.vspscript"), os.path.join(output_folder, "GEOMETRY", "winggen.vspscript")])
             if steps['mesh'] == 1:
                 create_directory(os.path.join(output_folder, "MESH"))
                 macro_file = "macro_with_prism.java" if steps['prism_layer'] == 1 else "macro_without_prism.java"
-                subprocess.run(['cp', os.path.join(main_folder, "template", macro_file), os.path.join(output_folder, "MESH", "macro.java")])
+                subprocess.run(['cp', os.path.join(main_folder, "templates", macro_file), os.path.join(output_folder, "MESH", "macro.java")])
             if steps['cfd'] == 1:
                 cfd_solver_dir = os.path.join(output_folder, "CFD", steps['cfd_solver'])
                 create_directory(cfd_solver_dir)
-                subprocess.run(['cp', os.path.join(main_folder, f"template/{steps['cfd_solver']}-cfd.cfg"), os.path.join(cfd_solver_dir, f"{steps['cfd_solver']}-cfd.cfg")])
+                subprocess.run(['cp', os.path.join(main_folder, f"templates/{steps['cfd_solver']}-cfd.cfg"), os.path.join(cfd_solver_dir, f"{steps['cfd_solver']}-cfd.cfg")])
             if steps['aso'] == 1:
                 aso_solver_dir = os.path.join(output_folder, "ASO", steps['aso_solver'])
                 create_directory(aso_solver_dir)
-                subprocess.run(['cp', os.path.join(main_folder, f"template/{steps['aso_solver']}-shapeOptimisation.cfg"), os.path.join(aso_solver_dir, f"{steps['aso_solver']}-shapeOptimisation.cfg")])
+                subprocess.run(['cp', os.path.join(main_folder, f"templates/{steps['aso_solver']}-shapeOptimisation.cfg"), os.path.join(aso_solver_dir, f"{steps['aso_solver']}-shapeOptimisation.cfg")])
 
             # Copy template to output folder
             subprocess.run(['cp', os.path.join(main_folder, template_folder), os.path.join(output_folder, "submit.pbs")])
