@@ -60,6 +60,9 @@ def main(np, input_dir, output_dir, prism_layer, max_yplus=None):
     max_yplus (float, optional): Maximum y+ value to adjust the prism layer.
     """
     try:
+        mesh_subdir = "with_prism" if prism_layer == 1 else "without_prism"
+        output_dir = os.path.join(output_dir, mesh_subdir)
+        
         os.chdir(output_dir)
 
         # Remove existing files if they exist

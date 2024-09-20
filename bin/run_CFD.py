@@ -82,8 +82,9 @@ def run_cfd(solver, directory):
         if os.path.exists(flow_output):
             os.remove(flow_output)
 
-        # Check for input mesh file in the MESH directory
-        mesh_file = os.path.join(directory, 'MESH', 'mesh.cga')
+         # Set mesh file path based on solver type
+        mesh_subdir = 'with_prism' if solver == 'RANS' else 'without_prism'
+        mesh_file = os.path.join(directory, 'MESH', mesh_subdir, 'mesh.cga')
         if not os.path.exists(mesh_file):
             print(f"Input mesh file '{mesh_file}' not found. Please generate the mesh first.")
             sys.exit(1)  # Exit if input file is missing
@@ -92,7 +93,7 @@ def run_cfd(solver, directory):
         subprocess.run(['cp', mesh_file, work_dir])
 
         # Determine the configuration file based on the solver type
-        cfg_file = os.path.join(directory, 'CFD', solver, f'{solver.lower()}-cfd.py')
+        cfg_file = os.path.join(directory, 'CFD', solver, f'{solver.upper()}-CFD.cfg')
 
         # Run SU2_CFD with the chosen configuration file
         cmd_str = f"mpiexec /path/to/SU2_v7.2.0_Binaries/SU2_CFD {cfg_file}"
@@ -113,7 +114,7 @@ def run_cfd(solver, directory):
                     break
                 else:
                     print("Y+ > 1 ... Re-calculating prism layer...")
-                    update_prism_layer(os.path.join(directory, 'MESH', 'macro_with_prism.java'), max_yplus)
+                    update_prism_layer(os.path.join(directory, 'MESH', 'with_prism', 'macro_with_prism.java'), max_yplus)
 
                     # Remove existing mesh files
                     if os.path.exists(mesh_file):
@@ -122,7 +123,7 @@ def run_cfd(solver, directory):
                         os.remove('./star@meshed.sim')
 
                     # Regenerate the mesh
-                    cmd_str = f"python3 {os.path.join(directory, 'MESH', 'mesh_generation.py')} -np 8 -i {os.path.join(directory, 'GEOMETRY')} -o {os.path.join(directory, 'MESH')} -pl 1 -my {max_yplus}"
+                    cmd_str = f"python3 {os.path.join(directory, 'MESH', 'mesh_generation.py')} -np 8 -i {os.path.join(directory, 'GEOMETRY')} -o {os.path.join(directory, 'MESH', 'with_prism')} -pl 1 -my {max_yplus}"
                     subprocess.run(cmd_str, shell=True)
 
                     # Rerun the CFD simulation

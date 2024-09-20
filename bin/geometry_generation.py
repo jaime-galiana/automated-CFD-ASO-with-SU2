@@ -132,9 +132,13 @@ def main(cant, sweep, output_dir):
     with open(script_path, "w") as write_file:
         write_file.write(replaced_content)
 
+    os.chdir(output_dir)
+
     # Run OpenVSP script
     cmd_str = f"/path/to/OpenVSP_v3.37.0_Compiled/vspscript -script {script_path}"
     subprocess.run(cmd_str, shell=True)
+
+    os.chdir("..")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate wing geometry with specified cant and sweep.')

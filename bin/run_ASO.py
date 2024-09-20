@@ -11,14 +11,8 @@ import os
 import sys
 import argparse
 
-def main():
+def main(np, solver, directory):
     """Main function to set up and run SU2 shape optimization."""
-    parser = argparse.ArgumentParser(description='Run SU2 shape optimization.')
-    parser.add_argument('solver', choices=['Euler', 'RANS'], help='Choose the solver type: Euler or RANS')
-    parser.add_argument('directory', help='Directory to run the optimization in')
-
-    args = parser.parse_args()
-
     try:
         # Set environment variables for SU2
         os.environ['SU2_RUN'] = '/path/to/SU2_v7.2.0_Binaries'
@@ -27,11 +21,13 @@ def main():
         os.environ['PYTHONPATH'] = os.environ.get('PYTHONPATH', '') + ':' + os.environ['SU2_RUN']
 
         # Define the working directory
-        work_dir = os.path.join(args.directory, 'ASO', args.solver)
+        work_dir = os.path.join(directory, 'ASO', solver)
         os.makedirs(work_dir, exist_ok=True)
 
-        # Check for input mesh file in the MESH directory
-        mesh_file = os.path.join(args.directory, 'MESH', 'mesh.cga')
+        # Set mesh file path based on solver type
+        mesh_subdir = 'with_prism' if solver == 'RANS' else 'without_prism'
+        mesh_file = os.path.join(directory, 'MESH', mesh_subdir, 'mesh.cga')
+
         if not os.path.exists(mesh_file):
             print(f"Input mesh file '{mesh_file}' not found. Please generate the mesh first.")
             sys.exit(1)  # Exit if input file is missing
@@ -58,7 +54,7 @@ def main():
             subprocess.run(cmd_str, cwd=work_dir, shell=True)
 
             # Run the shape optimization
-            cmd_str = f"python3 /path/to/SU2_v7.2.0_Binaries/shape_optimization.py -n 48 -g DISCRETE_ADJOINT -f {cfg_file}"
+            cmd_str = f"python3 /path/to/SU2_v7.2.0_Binaries/shape_optimization.py -np {np} -g DISCRETE_ADJOINT -f {cfg_file}"
             subprocess.run(cmd_str, cwd=work_dir, shell=True)
         else:
             print(f"Input configuration file '{cfg_file}' not found. Please provide the configuration file.")
@@ -69,4 +65,10 @@ def main():
         sys.exit(1)  # Exit if an exception occurs
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Run SU2 shape optimization with either Euler or RANS solver.')
+    parser.add_argument('np', type=int, help='Number of parallel processes')
+    parser.add_argument('solver', choices=['Euler', 'RANS'], help='Choose the solver type: Euler or RANS')
+    parser.add_argument('directory', help='Directory to run the simulation in')
+
+    args = parser.parse_args()
+    main(args.np, args.solver, args.directory)
